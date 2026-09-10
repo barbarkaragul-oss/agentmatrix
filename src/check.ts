@@ -48,8 +48,8 @@ export interface CellReport {
 
 export type PageResult = PreparedText | { error: string };
 
-/** Minimum amount of text a fetched page must contain before a missing quote counts as evidence. */
-export const MIN_PAGE_CHARS = 200;
+/** Minimum amount of text a fetched page must contain before a missing quote counts as evidence (a client-rendered shell has almost none; a short LICENSE file has more). */
+export const MIN_PAGE_CHARS = 40;
 const CHALLENGE_MARKERS = [/just a moment/i, /enable javascript/i, /access denied/i, /attention required/i, /verify you are human/i, /checking your browser/i];
 
 /**

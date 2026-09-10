@@ -1,9 +1,9 @@
 {
-  "run_at": "2026-09-10T18:56:52.574Z",
+  "run_at": "2026-09-10T18:57:33.995Z",
   "model": "none (mechanical quote re-check)",
   "changes": [],
   "stats": {
-    "agents_checked": 10,
+    "agents_checked": 1,
     "agents_failed": [],
     "cells_total": 320,
     "cells_verified": 320,
