@@ -207,35 +207,69 @@ async function verifyAgent(
     return keep(msg);
   }
 
-  const today = todayIso();
-  const byCap = new Map(output.cells.map((c) => [c.capability_id, c]));
+  const lookup = (url: string): Promise<PreparedText | null> => {
+    const hit = prepared.get(toFetchableUrl(url));
+    return hit ? Promise.resolve(hit) : fetchExtra(url, fetcher);
+  };
+  const { cells, verifiedCount, demoted, restored } = await reconcile(agent.id, capabilities, output.cells, previous, lookup, todayIso());
+  console.log(`[${agent.id}] ${verifiedCount} verified, ${demoted} demoted to unknown, ${restored} restored from previous, ${cells.filter((c) => c.value === 'unknown').length} unknown`);
+  return { agent: agent.id, cells, failed: null, usage };
+}
+
+export type ModelCell = z.infer<typeof ModelCell>;
+
+export interface ReconcileResult {
+  cells: Cell[];
+  verifiedCount: number;
+  demoted: number;
+  restored: number;
+}
+
+/**
+ * Turns the model's answer for one agent into verified cells.
+ *
+ * - A proposed value survives only if its quote is well-formed and is found on the page at
+ *   evidence_url (looked up through `lookup`, which returns null when the page is unavailable).
+ * - Anything else becomes "unknown" with an UNVERIFIED note that keeps the model's proposal.
+ * - If the result is "unknown" but the previous run had a verified cell whose quote is still on
+ *   its page, the previous cell is kept (re-dated), so one flaky answer never erases good data.
+ */
+export async function reconcile(
+  agentId: string,
+  capabilities: Capability[],
+  modelCells: ModelCell[],
+  previous: Map<string, Cell>,
+  lookup: (url: string) => Promise<PreparedText | null>,
+  today: string,
+): Promise<ReconcileResult> {
+  const byCap = new Map(modelCells.map((c) => [c.capability_id, c]));
   const cells: Cell[] = [];
   let verifiedCount = 0;
   let demoted = 0;
   let restored = 0;
   for (const cap of capabilities) {
-    const key = cellKey(agent.id, cap.id);
+    const key = cellKey(agentId, cap.id);
     const m = byCap.get(cap.id);
     const prev = previous.get(key);
     let cell: Cell;
     if (m && m.value !== 'unknown') {
-      const page = prepared.get(toFetchableUrl(m.evidence_url)) ?? (await fetchExtra(m.evidence_url, fetcher));
+      const page = /^https?:\/\//.test(m.evidence_url) ? await lookup(m.evidence_url) : null;
       const problems = quoteProblems(m.quote);
       const found = page ? findQuote(page, m.quote).found : false;
       if (problems.length === 0 && found) {
-        cell = { agent: agent.id, capability: cap.id, value: m.value, quote: m.quote.trim(), evidence_url: m.evidence_url, notes: m.notes.trim(), confidence: m.confidence, verified: true, verified_at: today };
+        cell = { agent: agentId, capability: cap.id, value: m.value, quote: m.quote.trim(), evidence_url: m.evidence_url, notes: m.notes.trim(), confidence: m.confidence, verified: true, verified_at: today };
         verifiedCount++;
       } else {
         demoted++;
         const why = problems.length ? problems.join('; ') : page ? 'quote not found at source' : 'source not fetched';
-        cell = { agent: agent.id, capability: cap.id, value: 'unknown', quote: '', evidence_url: '', notes: `UNVERIFIED (${why}); model proposed ${m.value}: ${m.notes.trim()}`, confidence: 'low', verified: false, verified_at: '' };
+        cell = { agent: agentId, capability: cap.id, value: 'unknown', quote: '', evidence_url: '', notes: `UNVERIFIED (${why}); model proposed ${m.value}: ${m.notes.trim()}`, confidence: 'low', verified: false, verified_at: '' };
       }
     } else {
-      cell = { agent: agent.id, capability: cap.id, value: 'unknown', quote: '', evidence_url: '', notes: m?.notes.trim() ?? '', confidence: 'low', verified: false, verified_at: '' };
+      cell = { agent: agentId, capability: cap.id, value: 'unknown', quote: '', evidence_url: '', notes: m?.notes.trim() ?? '', confidence: 'low', verified: false, verified_at: '' };
     }
 
-    if (cell.value === 'unknown' && prev && prev.value !== 'unknown' && prev.quote) {
-      const page = prepared.get(toFetchableUrl(prev.evidence_url)) ?? (await fetchExtra(prev.evidence_url, fetcher));
+    if (cell.value === 'unknown' && prev && prev.value !== 'unknown' && prev.quote && /^https?:\/\//.test(prev.evidence_url)) {
+      const page = await lookup(prev.evidence_url);
       if (page && findQuote(page, prev.quote).found) {
         cell = { ...prev, verified: true, verified_at: today };
         restored++;
@@ -243,8 +277,7 @@ async function verifyAgent(
     }
     cells.push(cell);
   }
-  console.log(`[${agent.id}] ${verifiedCount} verified, ${demoted} demoted to unknown, ${restored} restored from previous, ${cells.filter((c) => c.value === 'unknown').length} unknown`);
-  return { agent: agent.id, cells, failed: null, usage };
+  return { cells, verifiedCount, demoted, restored };
 }
 
 const extraCache = new Map<string, Promise<PreparedText | null>>();
