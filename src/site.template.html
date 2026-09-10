@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentMatrix — which AI coding agent supports what</title>
 <meta name="description" content="A cited feature matrix of AI coding agent CLIs. Every cell quotes official documentation and is re-verified weekly by Claude.">
+<meta name="repo" content="__REPO_URL__">
 <style>
   :root {
     --bg: #ffffff; --bg-1: #f6f7f9; --bg-2: #eceef2; --text: #14171a; --text-2: #5b6470; --text-3: #8a93a0;
@@ -146,7 +147,8 @@
   const capById = new Map(D.capabilities.map((c) => [c.id, c]));
 
   const repoLink = document.getElementById('repo-link');
-  repoLink.href = (document.querySelector('meta[name="repo"]') || {}).content || 'https://github.com/' + (location.hostname.split('.')[0] || '') + '/' + (location.pathname.split('/')[1] || 'agentmatrix');
+  const metaRepo = (document.querySelector('meta[name="repo"]') || {}).content || '';
+  repoLink.href = /^https:\/\/github\.com\//.test(metaRepo) ? metaRepo : 'https://github.com/' + (location.hostname.split('.')[0] || '') + '/' + (location.pathname.split('/')[1] || 'agentmatrix');
 
   function esc(s) { return String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
 

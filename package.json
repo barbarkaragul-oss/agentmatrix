@@ -5,6 +5,11 @@
   "description": "Which AI coding agent supports what? Every cell cited from official docs, re-verified weekly by Claude.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OWNER/agentmatrix"
+  },
+  "homepage": "https://OWNER.github.io/agentmatrix/",
   "engines": {
     "node": ">=20.10"
   },

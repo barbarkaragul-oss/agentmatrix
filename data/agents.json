@@ -7,7 +7,15 @@
       "homepage": "https://code.claude.com/docs/en/overview",
       "repo": "https://github.com/anthropics/claude-code",
       "sources": [
-        "https://code.claude.com/docs/en/overview",
+        "https://code.claude.com/docs/en/overview.md",
+        "https://code.claude.com/docs/en/cli-reference.md",
+        "https://code.claude.com/docs/en/mcp.md",
+        "https://code.claude.com/docs/en/hooks.md",
+        "https://code.claude.com/docs/en/skills.md",
+        "https://code.claude.com/docs/en/memory.md",
+        "https://code.claude.com/docs/en/permission-modes.md",
+        "https://code.claude.com/docs/en/model-config.md",
+        "https://code.claude.com/docs/en/setup.md",
         "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
       ]
     },
@@ -18,8 +26,16 @@
       "homepage": "https://developers.openai.com/codex/cli",
       "repo": "https://github.com/openai/codex",
       "sources": [
+        "https://learn.chatgpt.com/docs/developer-commands?surface=cli",
+        "https://learn.chatgpt.com/docs/agent-approvals-security",
+        "https://learn.chatgpt.com/docs/extend/mcp?surface=cli",
+        "https://learn.chatgpt.com/docs/hooks",
+        "https://learn.chatgpt.com/docs/config-file/config-reference",
+        "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+        "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+        "https://learn.chatgpt.com/docs/pricing",
         "https://raw.githubusercontent.com/openai/codex/main/README.md",
-        "https://developers.openai.com/codex/cli"
+        "https://github.com/openai/codex/releases"
       ]
     },
     {
@@ -29,67 +45,130 @@
       "homepage": "https://geminicli.com",
       "repo": "https://github.com/google-gemini/gemini-cli",
       "sources": [
-        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md"
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/reference/configuration.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/reference/commands.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/cli-reference.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/tools/mcp-server.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/hooks/reference.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/core/subagents.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/sandbox.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/resources/quota-and-pricing.md",
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/changelogs/index.md"
       ]
     },
     {
       "id": "cursor-cli",
       "name": "Cursor CLI",
-      "vendor": "Cursor",
+      "vendor": "Cursor (Anysphere)",
       "homepage": "https://cursor.com/cli",
       "repo": null,
       "sources": [
-        "https://cursor.com/docs/cli/overview"
+        "https://cursor.com/docs/cli/overview",
+        "https://cursor.com/docs/cli/using",
+        "https://cursor.com/docs/cli/reference/parameters",
+        "https://cursor.com/docs/cli/reference/slash-commands",
+        "https://cursor.com/docs/cli/reference/configuration",
+        "https://cursor.com/docs/cli/reference/permissions",
+        "https://cursor.com/docs/cli/headless",
+        "https://cursor.com/docs/cli/mcp",
+        "https://cursor.com/docs/cli/changelog",
+        "https://cursor.com/docs/cli/installation"
       ]
     },
     {
       "id": "copilot-cli",
       "name": "GitHub Copilot CLI",
       "vendor": "GitHub",
-      "homepage": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli",
+      "homepage": "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-copilot-cli",
       "repo": "https://github.com/github/copilot-cli",
       "sources": [
-        "https://raw.githubusercontent.com/github/copilot-cli/main/README.md"
+        "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-copilot-cli",
+        "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-hooks",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-byok-models",
+        "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/cancel-and-roll-back",
+        "https://docs.github.com/en/copilot/get-started/plans",
+        "https://raw.githubusercontent.com/github/copilot-cli/main/changelog.md"
       ]
     },
     {
       "id": "cline",
       "name": "Cline",
-      "vendor": "Cline",
+      "vendor": "Cline Bot Inc.",
       "homepage": "https://cline.bot",
       "repo": "https://github.com/cline/cline",
       "sources": [
-        "https://raw.githubusercontent.com/cline/cline/main/README.md"
+        "https://raw.githubusercontent.com/cline/cline/main/README.md",
+        "https://raw.githubusercontent.com/cline/cline/main/apps/cli/README.md",
+        "https://raw.githubusercontent.com/cline/cline/main/CHANGELOG.md",
+        "https://raw.githubusercontent.com/cline/cline/main/apps/cli/CHANGELOG.md",
+        "https://docs.cline.bot/cli/cli-reference.md",
+        "https://docs.cline.bot/usage/cli-overview.md",
+        "https://docs.cline.bot/mcp/mcp-overview.md",
+        "https://docs.cline.bot/customization/cline-rules.md",
+        "https://docs.cline.bot/features/auto-approve.md",
+        "https://raw.githubusercontent.com/cline/cline/main/.clinerules/hooks/README.md"
       ]
     },
     {
       "id": "opencode",
       "name": "OpenCode",
-      "vendor": "Anomaly (SST)",
+      "vendor": "Anomaly (formerly SST)",
       "homepage": "https://opencode.ai",
-      "repo": "https://github.com/sst/opencode",
+      "repo": "https://github.com/anomalyco/opencode",
       "sources": [
-        "https://opencode.ai/docs/"
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/cli.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/permissions.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/agents.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/mcp-servers.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/plugins.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/rules.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/tools.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/providers.mdx",
+        "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/index.mdx",
+        "https://github.com/anomalyco/opencode/releases.atom"
       ]
     },
     {
       "id": "goose",
       "name": "Goose",
-      "vendor": "Block",
-      "homepage": "https://block.github.io/goose/",
-      "repo": "https://github.com/block/goose",
+      "vendor": "Block (now hosted by the Agentic AI Foundation / Linux Foundation)",
+      "homepage": "https://goose-docs.ai/",
+      "repo": "https://github.com/aaif-goose/goose",
       "sources": [
-        "https://block.github.io/goose/docs/"
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/goose-cli-commands.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/getting-started/providers.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/environment-variables.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/context-engineering/hooks.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/context-engineering/using-skills.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/context-engineering/subagents.mdx",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/context-engineering/using-goosehints.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/managing-tools/goose-permissions.md",
+        "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/sessions/smart-context-management.md",
+        "https://github.com/aaif-goose/goose/releases"
       ]
     },
     {
       "id": "aider",
       "name": "Aider",
-      "vendor": "Aider AI",
+      "vendor": "Aider AI LLC",
       "homepage": "https://aider.chat",
       "repo": "https://github.com/Aider-AI/aider",
       "sources": [
-        "https://aider.chat/docs/"
+        "https://aider.chat/docs/usage/commands.html",
+        "https://aider.chat/docs/usage/modes.html",
+        "https://aider.chat/docs/config/options.html",
+        "https://aider.chat/docs/scripting.html",
+        "https://aider.chat/docs/git.html",
+        "https://aider.chat/docs/usage/images-urls.html",
+        "https://aider.chat/docs/llms.html",
+        "https://aider.chat/docs/config/reasoning.html",
+        "https://aider.chat/docs/install/optional.html",
+        "https://raw.githubusercontent.com/Aider-AI/aider/main/HISTORY.md"
       ]
     },
     {
@@ -99,7 +178,16 @@
       "homepage": "https://ampcode.com",
       "repo": null,
       "sources": [
-        "https://ampcode.com/manual"
+        "https://ampcode.com/docs/cli",
+        "https://ampcode.com/docs/cli/execute-mode",
+        "https://ampcode.com/docs/cli/settings",
+        "https://ampcode.com/docs/tools",
+        "https://ampcode.com/docs/customize/plugins",
+        "https://ampcode.com/docs/customize/skills",
+        "https://ampcode.com/docs/customize/mcp",
+        "https://ampcode.com/docs/customize/agents-md",
+        "https://ampcode.com/docs/pricing",
+        "https://ampcode.com/news"
       ]
     }
   ]

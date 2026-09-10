@@ -96,7 +96,11 @@ export function generateAll(): void {
     changes: changes ?? null,
   };
   const json = JSON.stringify(payload).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
-  const html = template.replace('/*__AGENTMATRIX_DATA__*/', `window.AGENTMATRIX = ${json};`);
+  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as { repository?: { url?: string } };
+  const repoUrl = (pkg.repository?.url ?? '').replace(/\.git$/, '');
+  const html = template
+    .replace('/*__AGENTMATRIX_DATA__*/', `window.AGENTMATRIX = ${json};`)
+    .replace('__REPO_URL__', repoUrl.replace(/"/g, ''));
   writeFileSync(path.join(DOCS_DIR, 'index.html'), html, 'utf8');
   writeFileSync(path.join(DOCS_DIR, 'matrix.json'), JSON.stringify({ ...matrix, agents, capabilities: caps.capabilities }, null, 2) + '\n', 'utf8');
   writeFileSync(path.join(DOCS_DIR, 'changes.json'), JSON.stringify(changes ?? { run_at: '', model: '', changes: [], stats: null }, null, 2) + '\n', 'utf8');

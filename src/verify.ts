@@ -339,9 +339,11 @@ export async function runVerify(opts: Options): Promise<number> {
 const isMain = process.argv[1] && path.resolve(process.argv[1]).endsWith(path.join('src', 'verify.ts'));
 if (isMain) {
   runVerify(parseArgs(process.argv.slice(2)))
-    .then((code) => process.exit(code))
+    .then((code) => {
+      process.exitCode = code;
+    })
     .catch((err) => {
       console.error(err);
-      process.exit(2);
+      process.exitCode = 2;
     });
 }
