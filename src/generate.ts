@@ -39,7 +39,7 @@ export function replaceBetween(source: string, start: string, end: string, body:
 export function renderMatrixMarkdown(agents: Agent[], caps: ReturnType<typeof loadCapabilities>, cells: Cell[]): string {
   const byKey = new Map(cells.map((c) => [cellKey(c.agent, c.capability), c]));
   const out: string[] = [];
-  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote; click it to open the source. On mobile, use the [interactive matrix](https://OWNER.github.io/agentmatrix/).');
+  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote (for ❌ cells, the explanation); click it to open the source. On mobile, use the [interactive matrix](https://OWNER.github.io/agentmatrix/).');
   out.push('');
   for (const group of caps.groups) {
     const groupCaps = caps.capabilities.filter((c) => c.group === group.id);
@@ -52,7 +52,9 @@ export function renderMatrixMarkdown(agents: Agent[], caps: ReturnType<typeof lo
       const row = agents.map((a) => {
         const cell = byKey.get(cellKey(a.id, cap.id));
         if (!cell || cell.value === 'unknown' || !isHttpUrl(cell.evidence_url)) return ICON.unknown;
-        const title = mdTitle(cell.quote || cell.notes || LABEL[cell.value]);
+        // A "no" is a claim about absence: its quote shows the closest documented feature, which reads
+        // as a contradiction on its own, so the tooltip carries the explanation instead.
+        const title = mdTitle(cell.value === 'no' ? cell.notes || cell.quote : cell.quote || cell.notes || LABEL[cell.value]);
         return `[${ICON[cell.value]}](${mdUrl(cell.evidence_url)} "${title}")`;
       });
       out.push(`| **${cap.name}** | ${row.join(' | ')} |`);

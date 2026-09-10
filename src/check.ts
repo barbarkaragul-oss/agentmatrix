@@ -203,16 +203,17 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
     const { cells, demoted } = applyFix(matrix.cells, reports, missing, today);
     const sorted = sortCells(cells, agents, caps.capabilities);
     const runAt = new Date().toISOString();
+    const checked = opts.agent ? sorted.filter((c) => c.agent === opts.agent) : sorted;
     const changes: ChangesFile = {
       run_at: runAt,
-      model: 'none (mechanical quote re-check)',
+      model: opts.agent ? `none (mechanical quote re-check, agent ${opts.agent} only)` : 'none (mechanical quote re-check)',
       changes: diffMatrices(matrix.cells, sorted),
       stats: {
-        agents_checked: new Set(targets.map((c) => c.agent)).size,
+        agents_checked: new Set(checked.map((c) => c.agent)).size,
         agents_failed: [],
-        cells_total: sorted.length,
-        cells_verified: sorted.filter((c) => c.verified).length,
-        cells_unknown: sorted.filter((c) => c.value === 'unknown').length,
+        cells_total: checked.length,
+        cells_verified: checked.filter((c) => c.verified).length,
+        cells_unknown: checked.filter((c) => c.value === 'unknown').length,
       },
     };
     saveJson(path.join(DATA_DIR, 'matrix.json'), { version: 1, generated_at: runAt, cells: sorted });

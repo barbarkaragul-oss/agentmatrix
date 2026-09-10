@@ -149,10 +149,21 @@
 
   const repoLink = document.getElementById('repo-link');
   const metaRepo = (document.querySelector('meta[name="repo"]') || {}).content || '';
-  repoLink.href = /^https:\/\/github\.com\//.test(metaRepo) ? metaRepo : 'https://github.com/' + (location.hostname.split('.')[0] || '') + '/' + (location.pathname.split('/')[1] || 'agentmatrix');
+  const metaUsable = /^https:\/\/github\.com\/[^/]+\/[^/]+/.test(metaRepo) && !/\/OWNER\//.test(metaRepo);
+  repoLink.href = metaUsable ? metaRepo : 'https://github.com/' + (location.hostname.split('.')[0] || '') + '/' + (location.pathname.split('/')[1] || 'agentmatrix');
 
   function esc(s) { return String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
   function isHttp(u) { return typeof u === 'string' && /^https?:\/\/\S+$/.test(u); }
+  function plain(s) {
+    return String(s)
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/\[([^\]]*)\]\[[^\]]*\]/g, '$1')
+      .replace(/(\*\*|__)(.+?)\1/g, '$2')
+      .replace(/`([^`]*)`/g, '$1')
+      .replace(/^[\s|>#-]+|[\s|]+$/g, '')
+      .replace(/\s+/g, ' ');
+  }
 
   const stats = document.getElementById('stats');
   const verified = D.cells.filter((c) => c.verified).length;
@@ -235,7 +246,7 @@
     document.getElementById('dlg-q').textContent = cap.question;
     let html = '<span class="pill ' + cell.value + '">' + LABEL[cell.value] + '</span>';
     if (cell.notes) html += '<p>' + esc(cell.notes) + '</p>';
-    if (cell.quote) html += '<blockquote>“' + esc(cell.quote) + '”</blockquote>';
+    if (cell.quote) html += '<blockquote title="Verbatim from the source, markdown syntax removed for display">“' + esc(plain(cell.quote)) + '”</blockquote>';
     html += '<div class="meta">';
     if (isHttp(cell.evidence_url)) html += '<span>Source</span><a href="' + esc(cell.evidence_url) + '" target="_blank" rel="noopener">' + esc(cell.evidence_url) + '</a>';
     html += '<span>Verified</span><span>' + (cell.verified ? 'quote found at source on ' + esc(cell.verified_at) : 'not verified — shown as unknown') + '</span>';
