@@ -25,6 +25,26 @@ Comparison posts about coding agents go stale the week they are published. Claud
 - **Nothing is taken on faith.** A cell is only shown as yes, partial or no if its quote was found, character for character, at the linked URL. If the quote cannot be found, the cell becomes *unknown* until a human or the weekly run fixes it.
 - **It updates itself.** A GitHub Action re-fetches the documentation weekly, asks Claude to re-decide every cell against a fixed rubric, re-checks every quote mechanically, and opens a pull request listing exactly what changed and why.
 
+One cell, in full, as stored in [`data/matrix.json`](data/matrix.json):
+
+```json
+{
+  "agent": "gemini-cli",
+  "capability": "sandbox",
+  "value": "yes",
+  "quote": "Lightweight, built-in sandboxing using `sandbox-exec`.",
+  "evidence_url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/sandbox.md",
+  "notes": "Built-in sandbox enabled with -s/--sandbox or GEMINI_SANDBOX: macOS Seatbelt (sandbox-exec profiles), Docker/Podman containers, a Windows Native sandbox (icacls low integrity level), and gVisor/runsc on Linux.",
+  "confidence": "high",
+  "verified": true,
+  "verified_at": "2026-09-10"
+}
+```
+
+### Why not a hand-maintained table?
+
+Hand-curated comparisons such as [coding-agents-matrix](https://github.com/PackmindHub/coding-agents-matrix) and the many blog round-ups are useful, and some cover more products than this repository does. The difference is what backs each cell. Here every value comes with the sentence from the vendor's own documentation that justifies it, that sentence is re-checked against the live page on every run, and the whole table is re-derived from the docs weekly by a model working from a written rubric. Fewer agents, but every cell has a receipt.
+
 ## The matrix
 
 <!-- matrix:start -->
@@ -111,7 +131,7 @@ data/capabilities.json ──┤
    2. Claude (claude-fable-5-1) reads all of it in one request and returns one JSON entry per
       capability: value + verbatim quote + source URL + notes, constrained by a JSON schema
    3. every quote is searched for in the fetched text; a quote that is not found demotes the
-      cell to "unknown" (the model cannot invent evidence that survives this step)
+      cell to "unknown" (a fabricated or paraphrased quote does not survive this step)
    4. the new matrix is diffed against the previous one → data/matrix.json + data/changes.json
    5. README tables and the static site are regenerated → a pull request is opened for review
 ```
@@ -151,6 +171,20 @@ npm run verify                    # all agents, then: npm run build
 - **Report a wrong cell:** [open an issue](https://github.com/OWNER/agentmatrix/issues/new?template=wrong-cell.yml) with a link to the docs.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the data format.
+
+### Wanted
+
+Agents that belong in the matrix and are not in it yet. Each is a self-contained first contribution: add the entry to `data/agents.json` with its documentation URLs and open a pull request; the weekly run (or a maintainer with an API key) fills the cells.
+
+- Kiro CLI (AWS)
+- Factory Droid CLI
+- Qwen Code
+- Crush (Charm)
+- OpenHands CLI
+- Junie CLI (JetBrains)
+- Auggie (Augment Code)
+- Mistral Vibe
+- Warp agent mode
 
 ## FAQ
 
