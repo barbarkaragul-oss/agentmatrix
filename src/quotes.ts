@@ -64,8 +64,9 @@ export function findQuote(haystack: PreparedText | string, quote: string): Quote
   }
 
   // The compact pass drops all punctuation, so it must not be used for quotes that contain an
-  // ellipsis: "A ... B" would otherwise match a page where A and B are adjacent sentences.
-  if (!/\.\.\.|…/.test(q)) {
+  // ellipsis in any spelling ("...", ". . .", "..", "…"): "A ... B" would otherwise match a page
+  // where A and B are adjacent sentences.
+  if (!/\.\s*\.|…/.test(q)) {
     const cq = compactText(q);
     if (cq.length >= MIN_QUOTE_LENGTH && prepared.compact.includes(cq)) {
       return { found: true, method: 'compact' };

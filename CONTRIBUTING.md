@@ -46,7 +46,7 @@ One entry per agent × capability:
 }
 ```
 
-- `quote`: 12 to 400 characters, one contiguous excerpt, copied exactly. Smart quotes, markdown emphasis and whitespace differences are tolerated; different wording is not.
+- `quote`: 12 to 400 characters, one contiguous excerpt, copied exactly. Smart quotes, markdown emphasis, capitalisation, punctuation and whitespace differences are tolerated; different wording is not.
 - `evidence_url`: the page that contains the quote. Fragments (`#section`) are fine.
 - `value: "unknown"` cells have an empty quote and `verified: false`.
 - Leave `verified` and `verified_at` alone; `npm run check -- --fix` sets them.
@@ -67,7 +67,9 @@ Commit the regenerated `README.md` and `docs/` together with your data change; C
 
 The `weekly` workflow re-fetches every evidence URL and searches for every quote. When all quotes are still present it commits the refreshed verification dates directly. When a quote has disappeared it demotes the cell to *unknown*, keeps the old quote, URL and value in the notes, and opens both a pull request and an issue labelled `needs-recheck`. Fixing such a cell is a good first contribution: find the current wording in the docs (or confirm the feature is gone), update the cell, run `npm run check`, and open a pull request.
 
-If the repository has an `ANTHROPIC_API_KEY` secret, the same workflow re-derives every cell with Claude instead and opens a pull request titled *matrix: weekly re-verification*. Review each row in the description against its source. Merging is a human decision; if a change looks wrong, fix the rubric or the source list in the same PR so the next run agrees with you.
+If the repository has an `ANTHROPIC_API_KEY` secret, the same workflow re-derives every cell with Claude instead. As in the free mode, unchanged values are committed directly and changed values are opened as a pull request titled *matrix: weekly re-verification (N value changes)*; no issue is opened in this mode. Review each row in the description against its source. Merging is a human decision; if a change looks wrong, fix the rubric or the source list in the same PR so the next run agrees with you.
+
+Two repository settings make this work, both under Settings → Actions → General → Workflow permissions: choose **Read and write permissions** and enable **Allow GitHub Actions to create and approve pull requests**. Without the second one the first run that finds a change fails with "GitHub Actions is not permitted to create or approve pull requests". If `main` is protected so that direct pushes are rejected, the workflow falls back to a pull request for the date refresh as well.
 
 Pull requests opened by the workflow do not trigger the CI workflow (GitHub does not run workflows for changes made with the default token), which is why the weekly workflow runs the typecheck, tests and build itself before opening one.
 

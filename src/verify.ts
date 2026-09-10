@@ -26,6 +26,7 @@ import { findQuote, prepareText, quoteProblems, type PreparedText } from './quot
 import {
   DATA_DIR,
   cellKey,
+  isHttpUrl,
   loadAgents,
   loadCapabilities,
   loadMatrix,
@@ -264,11 +265,12 @@ export async function reconcile(
     const prev = previous.get(key);
     let cell: Cell;
     if (m && m.value !== 'unknown') {
-      const page = /^https?:\/\//.test(m.evidence_url) ? await lookup(m.evidence_url) : null;
+      const url = m.evidence_url.trim();
+      const page = isHttpUrl(url) ? await lookup(url) : null;
       const problems = quoteProblems(m.quote);
       const found = page ? findQuote(page, m.quote).found : false;
       if (problems.length === 0 && found) {
-        cell = { agent: agentId, capability: cap.id, value: m.value, quote: m.quote.trim(), evidence_url: m.evidence_url, notes: m.notes.trim(), confidence: m.confidence, verified: true, verified_at: today };
+        cell = { agent: agentId, capability: cap.id, value: m.value, quote: m.quote.trim(), evidence_url: url, notes: m.notes.trim(), confidence: m.confidence, verified: true, verified_at: today };
         verifiedCount++;
       } else {
         demoted++;
@@ -279,7 +281,7 @@ export async function reconcile(
       cell = { agent: agentId, capability: cap.id, value: 'unknown', quote: '', evidence_url: '', notes: m?.notes.trim() ?? '', confidence: 'low', verified: false, verified_at: '' };
     }
 
-    if (cell.value === 'unknown' && prev && prev.value !== 'unknown' && prev.quote && /^https?:\/\//.test(prev.evidence_url)) {
+    if (cell.value === 'unknown' && prev && prev.value !== 'unknown' && prev.quote && isHttpUrl(prev.evidence_url)) {
       const page = await lookup(prev.evidence_url);
       if (page && findQuote(page, prev.quote).found) {
         cell = { ...prev, verified: true, verified_at: today };

@@ -15,6 +15,11 @@ export function isHttpUrl(s: string): boolean {
   return /^https?:\/\/\S+$/.test(s);
 }
 
+/** Makes a URL safe as a markdown link destination: spaces and parentheses would end or break it. */
+export function mdUrl(url: string): string {
+  return url.replace(/ /g, '%20').replace(/\(/g, '%28').replace(/\)/g, '%29');
+}
+
 export const ValueSchema = z.enum(['yes', 'partial', 'no', 'unknown']);
 export type Value = z.infer<typeof ValueSchema>;
 

@@ -1,5 +1,5 @@
 import type { Agent, Capability, Cell, Change, ChangesFile } from './types.js';
-import { cellKey } from './types.js';
+import { cellKey, isHttpUrl, mdUrl } from './types.js';
 
 export function diffMatrices(previous: Cell[], next: Cell[]): Change[] {
   const prevByKey = new Map(previous.map((c) => [cellKey(c.agent, c.capability), c]));
@@ -21,7 +21,10 @@ export function diffMatrices(previous: Cell[], next: Cell[]): Change[] {
   return changes;
 }
 
-/** Escapes text for a markdown table cell inside a PR or issue body: no pipes, no line breaks, no HTML, no @-mentions or #refs rendered as links. */
+/**
+ * Escapes text for a markdown table cell inside a PR or issue body so it renders verbatim: no
+ * pipes, no line breaks, no HTML, no @-mentions or #refs, no links, emphasis or code spans.
+ */
 export function escapeMd(s: string): string {
   // Order matters: '&' and '#' are escaped first because the entities inserted afterwards contain them.
   return s
@@ -32,6 +35,13 @@ export function escapeMd(s: string): string {
     .replace(/\|/g, '&#124;')
     .replace(/@/g, '&#64;')
     .replace(/`/g, '&#96;')
+    .replace(/\[/g, '&#91;')
+    .replace(/\]/g, '&#93;')
+    .replace(/\*/g, '&#42;')
+    .replace(/_/g, '&#95;')
+    .replace(/~/g, '&#126;')
+    .replace(/!/g, '&#33;')
+    .replace(/\\/g, '&#92;')
     .replace(/\r?\n/g, ' ')
     .trim();
 }
@@ -68,8 +78,8 @@ export function renderChangesMarkdown(file: ChangesFile, agents: Agent[], capabi
   lines.push('|---|---|---|---|');
   for (const ch of file.changes) {
     const change = `${ch.from} → **${ch.to}**`;
-    const evidence = ch.evidence_url
-      ? `[source](${ch.evidence_url})${ch.quote ? ` — <code>${escapeMd(shorten(ch.quote, 160))}</code>` : ''}`
+    const evidence = isHttpUrl(ch.evidence_url)
+      ? `[source](${mdUrl(ch.evidence_url)})${ch.quote ? ` — <code>${escapeMd(shorten(ch.quote, 160))}</code>` : ''}`
       : ch.notes
         ? `<code>${escapeMd(shorten(ch.notes, 220))}</code>`
         : '—';

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { diffMatrices, renderChangesMarkdown } from '../src/diff.js';
+import { diffMatrices, escapeMd, renderChangesMarkdown } from '../src/diff.js';
 import type { Cell } from '../src/types.js';
 
 function cell(agent: string, capability: string, value: Cell['value'], extra: Partial<Cell> = {}): Cell {
@@ -21,12 +21,17 @@ test('diffMatrices reports value changes and new cells only', () => {
   assert.equal(changes[0]?.quote, 'now supported');
 });
 
-test('renderChangesMarkdown produces a table with names and escapes pipes', () => {
+test('escapeMd neutralises every markdown and HTML construct that could render in a PR body', () => {
+  assert.equal(escapeMd('see [here](http://evil) **bold** _it_ `code` @user #12 a|b <b>x</b> & ~s~ !'), 'see &#91;here&#93;(http://evil) &#42;&#42;bold&#42;&#42; &#95;it&#95; &#96;code&#96; &#64;user &#35;12 a&#124;b &lt;b&gt;x&lt;/b&gt; &amp; &#126;s&#126; &#33;');
+  assert.equal(escapeMd('path C:\\x\nnext'), 'path C:&#92;x next');
+});
+
+test('renderChangesMarkdown produces a table with names, safe link destinations and verbatim quotes', () => {
   const md = renderChangesMarkdown(
     {
       run_at: '2026-09-10T06:00:00Z',
       model: 'claude-fable-5-1',
-      changes: [{ agent: 'a', capability: 'x', from: 'no', to: 'yes', quote: 'supports a | b', evidence_url: 'https://e.x/', notes: '' }],
+      changes: [{ agent: 'a', capability: 'x', from: 'no', to: 'yes', quote: 'supports a | b and [links](x)', evidence_url: 'https://e.x/a)b', notes: '' }],
       stats: { agents_checked: 1, agents_failed: ['b'], cells_total: 2, cells_verified: 2, cells_unknown: 0 },
     },
     [
@@ -34,11 +39,14 @@ test('renderChangesMarkdown produces a table with names and escapes pipes', () =
       { id: 'b', name: 'Agent B', vendor: 'v', homepage: 'https://b.x/', repo: null, sources: ['https://b.x/'] },
     ],
     [{ id: 'x', group: 'g', name: 'Cap X', question: 'q', rubric: 'r' }],
+    ['a/y: fetch failed: HTTP 503'],
   );
   assert.ok(md.includes('1 value change'));
   assert.ok(md.includes('| Agent A | Cap X | no → **yes** |'));
-  assert.ok(md.includes('<code>supports a &#124; b</code>'));
+  assert.ok(md.includes('[source](https://e.x/a%29b)'));
+  assert.ok(md.includes('<code>supports a &#124; b and &#91;links&#93;(x)</code>'));
   assert.ok(md.includes('Agent B'));
+  assert.ok(md.includes('Pages that could not be fetched this run (cells left untouched, 1):'));
 });
 
 test('renderChangesMarkdown with no changes says so', () => {

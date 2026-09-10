@@ -102,8 +102,10 @@ export function htmlToText(html: string): string {
 
 // Only tags that documentation authors commonly embed in markdown prose. Deliberately short:
 // command placeholders such as <source>, <ref> or <path> must survive, so generic words are out.
+// Case-sensitive on purpose: HTML in markdown is lowercase, while generics such as Option<A> or
+// List<B> are not, so they survive.
 const INLINE_HTML_TAGS = 'a|abbr|b|br|code|details|div|em|h[1-6]|i|img|kbd|li|ol|p|pre|small|span|strong|sub|summary|sup|table|tbody|td|th|thead|tr|ul';
-const INLINE_HTML_RE = new RegExp(`<\\/?(?:${INLINE_HTML_TAGS})\\b(?:\\s[^<>]*)?\\/?>`, 'gi');
+const INLINE_HTML_RE = new RegExp(`<\\/?(?:${INLINE_HTML_TAGS})\\b(?:\\s[^<>]*)?\\/?>`, 'g');
 
 /** Removes common HTML tags that documentation authors embed in markdown (e.g. <kbd>Esc</kbd>). */
 export function stripInlineHtml(text: string): string {
@@ -132,7 +134,9 @@ async function readBody(res: Response, maxBytes: number): Promise<{ buf: Buffer;
     chunks.push(value);
     total += value.length;
     if (total >= maxBytes) {
-      truncated = total > maxBytes;
+      // Reaching the limit means the rest of the body was not read; treat it as truncated even
+      // when the body happened to be exactly maxBytes long (a rare, harmless false positive).
+      truncated = true;
       await reader.cancel().catch(() => undefined);
       break;
     }

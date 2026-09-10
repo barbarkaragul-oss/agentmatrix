@@ -30,7 +30,8 @@ test('htmlToText strips scripts, styles and tags, keeps visible text with line b
   assert.ok(!text.includes('<'));
 });
 
-test('stripInlineHtml removes documentation tags inside markdown but leaves code generics alone', () => {
+test('stripInlineHtml removes documentation tags inside markdown but leaves code generics and placeholders alone', () => {
   assert.equal(stripInlineHtml('press <kbd>Esc</kbd> twice, see <a href="x">docs</a><br/>'), 'press  Esc  twice, see  docs  ');
-  assert.equal(stripInlineHtml('use Array<string> and Map<K, V>'), 'use Array<string> and Map<K, V>');
+  assert.equal(stripInlineHtml('use Array<string> and Map<K, V> and Option<A> and List<B>'), 'use Array<string> and Map<K, V> and Option<A> and List<B>');
+  assert.equal(stripInlineHtml('gemini extensions install <source> [--ref <ref>] <path>'), 'gemini extensions install <source> [--ref <ref>] <path>');
 });

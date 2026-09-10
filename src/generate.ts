@@ -6,19 +6,15 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { DOCS_DIR, ROOT, cellKey, isHttpUrl, loadAgents, loadCapabilities, loadChanges, loadMatrix, type Agent, type Capability, type Cell, type Value } from './types.js';
+import { DOCS_DIR, ROOT, cellKey, isHttpUrl, loadAgents, loadCapabilities, loadChanges, loadMatrix, mdUrl, type Agent, type Capability, type Cell, type Value } from './types.js';
 
 const ICON: Record<Value, string> = { yes: '✅', partial: '🟡', no: '❌', unknown: '❔' };
 const LABEL: Record<Value, string> = { yes: 'yes', partial: 'partial', no: 'no', unknown: 'unknown' };
 
-function mdTitle(s: string, max = 180): string {
-  const t = s.replace(/\s+/g, ' ').replace(/"/g, "'").trim();
+/** Link title for a README cell: double quotes would end the title and a backslash would escape its closing quote. */
+export function mdTitle(s: string, max = 180): string {
+  const t = s.replace(/\s+/g, ' ').replace(/"/g, "'").replace(/\\/g, '/').trim();
   return t.length > max ? t.slice(0, max - 1) + '…' : t;
-}
-
-function mdUrl(url: string): string {
-  // Parentheses and spaces would end or break the markdown link destination.
-  return url.replace(/ /g, '%20').replace(/\(/g, '%28').replace(/\)/g, '%29');
 }
 
 export function replaceBetween(source: string, start: string, end: string, body: string): string {

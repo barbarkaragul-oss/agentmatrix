@@ -48,6 +48,23 @@ export interface CellReport {
 
 export type PageResult = PreparedText | { error: string };
 
+/** Minimum amount of text a fetched page must contain before a missing quote counts as evidence. */
+export const MIN_PAGE_CHARS = 200;
+const CHALLENGE_MARKERS = [/just a moment/i, /enable javascript/i, /access denied/i, /attention required/i, /verify you are human/i, /checking your browser/i];
+
+/**
+ * A 200 response is not always the page: bot challenges, consent walls and client-rendered
+ * shells return status 200 with no documentation in them. Such pages must never demote a cell,
+ * so they are reported as fetch errors instead. Returns the reason, or null when the page is usable.
+ */
+export function unusablePage(text: string, truncated: boolean): string | null {
+  if (truncated) return 'page larger than the download limit';
+  if (text.trim().length < MIN_PAGE_CHARS) return `page has only ${text.trim().length} characters of text`;
+  const head = text.slice(0, 2000);
+  for (const re of CHALLENGE_MARKERS) if (re.test(head)) return 'page looks like a bot challenge or consent wall';
+  return null;
+}
+
 export interface CheckOptions {
   soft: boolean;
   fix: boolean;
@@ -147,9 +164,10 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
   await Promise.all(
     urls.map(async (url) => {
       const res = await fetcher.get(url);
-      if (!res.ok) {
-        pages.set(url, { error: res.error ?? `HTTP ${res.status}` });
-        console.log(`  FETCH ERROR ${url} (${res.error ?? res.status})`);
+      const problem = !res.ok ? (res.error ?? `HTTP ${res.status}`) : unusablePage(res.text, res.truncated);
+      if (problem) {
+        pages.set(url, { error: problem });
+        console.log(`  FETCH ERROR ${url} (${problem})`);
       } else {
         pages.set(url, prepareText(res.text));
       }

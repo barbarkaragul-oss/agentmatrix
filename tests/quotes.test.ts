@@ -55,6 +55,9 @@ test('quoteProblems flags length and replacement characters', () => {
 test('findQuote: a stitched quote with an ellipsis cannot pass through the compact pass', () => {
   const page = prepareText('Hooks run before tools. Skills load from SKILL.md files.');
   assert.equal(findQuote(page, 'Hooks run before tools ... Skills load from SKILL.md files').found, false);
+  assert.equal(findQuote(page, 'Hooks run before tools .. Skills load from SKILL.md files').found, false);
+  assert.equal(findQuote(page, 'Hooks run before tools . . . Skills load from SKILL.md files').found, false);
+  assert.equal(findQuote(page, 'Hooks run before tools … Skills load from SKILL.md files').found, false);
   const code = prepareText('For background tasks, `delegate(..., async: true)` returns a task id.');
   assert.equal(findQuote(code, 'For background tasks, `delegate(..., async: true)` returns a task id.').found, true);
 });

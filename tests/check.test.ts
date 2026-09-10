@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { applyFix, classifyCell, structuralProblems, type CellReport } from '../src/check.js';
+import { applyFix, classifyCell, structuralProblems, unusablePage, type CellReport } from '../src/check.js';
 import { prepareText } from '../src/quotes.js';
 import type { Agent, Capability, Cell } from '../src/types.js';
 
@@ -54,6 +54,13 @@ test('applyFix twice is stable: a demoted cell is skipped next time instead of f
   const second = applyFix(first.cells, [report], [], '2026-09-17');
   assert.equal(second.demoted, 0);
   assert.deepEqual(second.cells[0], demotedCell);
+});
+
+test('unusablePage rejects truncated, empty and bot-challenge pages', () => {
+  assert.equal(unusablePage('x'.repeat(5000), true), 'page larger than the download limit');
+  assert.match(unusablePage('short', false) ?? '', /only 5 characters/);
+  assert.match(unusablePage('Just a moment... Checking your browser before accessing the site. ' + 'x'.repeat(300), false) ?? '', /bot challenge/);
+  assert.equal(unusablePage('Real documentation. '.repeat(20), false), null);
 });
 
 test('structuralProblems finds duplicates, unknown ids, missing quotes and missing cells', () => {

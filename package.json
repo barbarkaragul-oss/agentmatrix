@@ -11,7 +11,7 @@
   },
   "homepage": "https://OWNER.github.io/agentmatrix/",
   "engines": {
-    "node": ">=20.10"
+    "node": ">=22"
   },
   "scripts": {
     "check": "tsx src/check.ts",
