@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Regenerate README tables and site
+        run: npm run build
+      - name: Generated files must be committed
+        run: |
+          if ! git diff --quiet -- README.md docs/; then
+            echo "README.md or docs/ is out of date. Run 'npm run build' and commit the result." >&2
+            git --no-pager diff --stat -- README.md docs/
+            exit 1
+          fi
+      - name: Verify every quote against its source
+        run: npm run check

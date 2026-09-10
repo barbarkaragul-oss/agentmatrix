@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentMatrix — which AI coding agent supports what</title>
+<meta name="description" content="A cited feature matrix of AI coding agent CLIs. Every cell quotes official documentation and is re-verified weekly by Claude.">
+<style>
+  :root {
+    --bg: #ffffff; --bg-1: #f6f7f9; --bg-2: #eceef2; --text: #14171a; --text-2: #5b6470; --text-3: #8a93a0;
+    --border: #d9dde3; --border-2: #b9c0c9; --accent: #2456d6;
+    --yes-bg: #e3f6ec; --yes-fg: #0b6b3a; --partial-bg: #fff3d6; --partial-fg: #8a5a00;
+    --no-bg: #fde8e8; --no-fg: #a12525; --unk-bg: #f0f1f3; --unk-fg: #6b7380;
+    --radius: 10px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1216; --bg-1: #161a20; --bg-2: #1f242c; --text: #e8ebef; --text-2: #a4acb8; --text-3: #737c89;
+      --border: #2a313b; --border-2: #3b4450; --accent: #7aa2ff;
+      --yes-bg: #10331f; --yes-fg: #7fdba6; --partial-bg: #3a2c05; --partial-fg: #f2c66b;
+      --no-bg: #3d1414; --no-fg: #f39a9a; --unk-bg: #22262d; --unk-fg: #9aa3ae;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1216; --bg-1: #161a20; --bg-2: #1f242c; --text: #e8ebef; --text-2: #a4acb8; --text-3: #737c89;
+    --border: #2a313b; --border-2: #3b4450; --accent: #7aa2ff;
+    --yes-bg: #10331f; --yes-fg: #7fdba6; --partial-bg: #3a2c05; --partial-fg: #f2c66b;
+    --no-bg: #3d1414; --no-fg: #f39a9a; --unk-bg: #22262d; --unk-fg: #9aa3ae;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 var(--sans); }
+  a { color: var(--accent); }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 24px 20px 60px; }
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .tagline { color: var(--text-2); margin: 0; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; font-size: 13px; color: var(--text-2); }
+  .stats b { color: var(--text); font-weight: 600; }
+  .actions { display: flex; gap: 8px; align-items: center; }
+  button, .btn { font: inherit; font-size: 13px; color: var(--text); background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; text-decoration: none; }
+  button:hover, .btn:hover { border-color: var(--border-2); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; }
+  .controls input[type="search"] { font: inherit; font-size: 14px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); min-width: 240px; }
+  .chip { font-size: 13px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-1); color: var(--text-2); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--text-2); margin-left: auto; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .table-wrap { overflow: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); max-height: 78vh; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 900px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 0; }
+  thead th { position: sticky; top: 0; z-index: 3; background: var(--bg-1); font-size: 12.5px; font-weight: 600; text-align: center; padding: 10px 8px; white-space: nowrap; }
+  thead th:first-child { text-align: left; left: 0; z-index: 4; }
+  tbody th { position: sticky; left: 0; z-index: 2; background: var(--bg); text-align: left; font-weight: 500; font-size: 13.5px; padding: 6px 12px; white-space: nowrap; border-right: 1px solid var(--border); }
+  tr.group th { background: var(--bg-2); color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; padding: 7px 12px; }
+  tr.group td { background: var(--bg-2); }
+  td.cell { text-align: center; padding: 3px; }
+  .v { width: 100%; height: 34px; border: 0; border-radius: 6px; font: 600 13px/1 var(--sans); cursor: pointer; background: var(--unk-bg); color: var(--unk-fg); display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+  .v.yes { background: var(--yes-bg); color: var(--yes-fg); }
+  .v.partial { background: var(--partial-bg); color: var(--partial-fg); }
+  .v.no { background: var(--no-bg); color: var(--no-fg); }
+  .v:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .v.unverified { opacity: 0.6; }
+  .v .badge { font-size: 10px; font-weight: 500; opacity: 0.8; }
+  .hidden { display: none !important; }
+  dialog { border: 1px solid var(--border); border-radius: 14px; background: var(--bg); color: var(--text); padding: 0; max-width: 620px; width: calc(100% - 32px); }
+  dialog::backdrop { background: rgba(0,0,0,0.45); }
+  .d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 18px 20px 6px; }
+  .d-head h2 { margin: 0; font-size: 18px; }
+  .d-body { padding: 0 20px 20px; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+  .pill.yes { background: var(--yes-bg); color: var(--yes-fg); } .pill.partial { background: var(--partial-bg); color: var(--partial-fg); }
+  .pill.no { background: var(--no-bg); color: var(--no-fg); } .pill.unknown { background: var(--unk-bg); color: var(--unk-fg); }
+  blockquote { margin: 12px 0; padding: 12px 14px; border-left: 3px solid var(--border-2); background: var(--bg-1); border-radius: 0 8px 8px 0; font-size: 14.5px; }
+  .meta { font-size: 13px; color: var(--text-2); display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin-top: 10px; }
+  .meta a { word-break: break-all; }
+  .q { color: var(--text-2); font-size: 13.5px; margin: 6px 0 0; }
+  section.changes { margin-top: 28px; }
+  section.changes h2 { font-size: 18px; margin: 0 0 8px; }
+  .chg { display: grid; gap: 6px; }
+  .chg div { font-size: 14px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-1); }
+  .chg .from { color: var(--text-3); } .chg .to { font-weight: 600; }
+  footer { margin-top: 36px; color: var(--text-3); font-size: 13px; }
+  kbd { font: 12px var(--mono); background: var(--bg-2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+  .count { font-size: 11px; font-weight: 500; color: var(--text-3); display: block; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>AgentMatrix</h1>
+      <p class="tagline">Which AI coding agent supports what? Every cell quotes official documentation and is re-verified weekly by Claude.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="actions">
+      <a class="btn" id="repo-link" href="#" rel="noopener">GitHub</a>
+      <a class="btn" href="matrix.json">JSON</a>
+      <button id="theme" type="button" aria-label="Toggle color theme">Theme</button>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input id="search" type="search" placeholder="Filter capabilities (e.g. hooks, sandbox, windows)" aria-label="Filter capabilities">
+    <div id="groups" role="group" aria-label="Capability groups"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--yes-bg);border:1px solid var(--yes-fg)"></i>yes</span>
+      <span><i class="dot" style="background:var(--partial-bg);border:1px solid var(--partial-fg)"></i>partial</span>
+      <span><i class="dot" style="background:var(--no-bg);border:1px solid var(--no-fg)"></i>no</span>
+      <span><i class="dot" style="background:var(--unk-bg);border:1px solid var(--unk-fg)"></i>unknown</span>
+    </div>
+  </div>
+
+  <div class="table-wrap" id="table-wrap"></div>
+
+  <section class="changes" id="changes"></section>
+
+  <footer>
+    Built from <code>data/matrix.json</code>. A cell is only shown as yes, partial or no when its quote was found verbatim at the linked source. Click any cell to read the evidence. Keyboard: <kbd>Tab</kbd> to a cell, <kbd>Enter</kbd> to open.
+  </footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="d-head">
+    <div>
+      <h2 id="dlg-title"></h2>
+      <p class="q" id="dlg-q"></p>
+    </div>
+    <button type="button" id="dlg-close" aria-label="Close">✕</button>
+  </div>
+  <div class="d-body" id="dlg-body"></div>
+</dialog>
+
+<script>
+window.AGENTMATRIX = {"generated_at":"","agents":[{"id":"claude-code","name":"Claude Code","vendor":"Anthropic","homepage":"https://code.claude.com/docs/en/overview","repo":"https://github.com/anthropics/claude-code","sources":["https://code.claude.com/docs/en/overview","https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"]},{"id":"codex-cli","name":"Codex CLI","vendor":"OpenAI","homepage":"https://developers.openai.com/codex/cli","repo":"https://github.com/openai/codex","sources":["https://raw.githubusercontent.com/openai/codex/main/README.md","https://developers.openai.com/codex/cli"]},{"id":"gemini-cli","name":"Gemini CLI","vendor":"Google","homepage":"https://geminicli.com","repo":"https://github.com/google-gemini/gemini-cli","sources":["https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md"]},{"id":"cursor-cli","name":"Cursor CLI","vendor":"Cursor","homepage":"https://cursor.com/cli","repo":null,"sources":["https://cursor.com/docs/cli/overview"]},{"id":"copilot-cli","name":"GitHub Copilot CLI","vendor":"GitHub","homepage":"https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli","repo":"https://github.com/github/copilot-cli","sources":["https://raw.githubusercontent.com/github/copilot-cli/main/README.md"]},{"id":"cline","name":"Cline","vendor":"Cline","homepage":"https://cline.bot","repo":"https://github.com/cline/cline","sources":["https://raw.githubusercontent.com/cline/cline/main/README.md"]},{"id":"opencode","name":"OpenCode","vendor":"Anomaly (SST)","homepage":"https://opencode.ai","repo":"https://github.com/sst/opencode","sources":["https://opencode.ai/docs/"]},{"id":"goose","name":"Goose","vendor":"Block","homepage":"https://block.github.io/goose/","repo":"https://github.com/block/goose","sources":["https://block.github.io/goose/docs/"]},{"id":"aider","name":"Aider","vendor":"Aider AI","homepage":"https://aider.chat","repo":"https://github.com/Aider-AI/aider","sources":["https://aider.chat/docs/"]},{"id":"amp","name":"Amp","vendor":"Sourcegraph","homepage":"https://ampcode.com","repo":null,"sources":["https://ampcode.com/manual"]}],"groups":[{"id":"extend","name":"Extensibility"},{"id":"control","name":"Control and safety"},{"id":"session","name":"Sessions and automation"},{"id":"model","name":"Models"},{"id":"io","name":"Input and output"},{"id":"platform","name":"Platform"}],"capabilities":[{"id":"mcp_client","group":"extend","name":"MCP client","question":"Can the agent connect to external MCP servers and use their tools?","rubric":"YES if there is a documented way to configure MCP servers (config file, CLI command, or settings) and the agent can call their tools. PARTIAL if MCP support is marked experimental or preview, or limited to one transport. NO if MCP is not mentioned or documented as unsupported."},{"id":"mcp_server","group":"extend","name":"Acts as MCP server","question":"Can the agent itself be exposed as an MCP server to other clients?","rubric":"YES if there is a documented command or mode that serves the agent's tools over MCP (for example a serve subcommand). PARTIAL if only an unofficial or experimental path is documented. NO otherwise."},{"id":"hooks","group":"extend","name":"Lifecycle hooks","question":"Can users run their own scripts at lifecycle events such as before or after a tool call, or at session start?","rubric":"YES if a hook system with multiple documented events is available to end users via configuration. PARTIAL if only a single event is exposed, or hooks are only available through a plugin or extension API rather than user configuration. NO otherwise."},{"id":"custom_commands","group":"extend","name":"Custom slash commands","question":"Can users define reusable prompt templates or slash commands in files?","rubric":"YES if user-defined commands or prompt templates are documented (for example markdown files in a commands directory, or custom prompts in config). PARTIAL if only built-in commands can be customized in a limited way. NO otherwise."},{"id":"skills","group":"extend","name":"Agent Skills","question":"Does the agent load Agent Skills (SKILL.md folders per the open Agent Skills format) or an equivalent modular skill package?","rubric":"YES if the docs describe loading SKILL.md-based skills or an equivalent named skills format from a directory. PARTIAL if skills are only available through an extension or plugin system with a different format. NO otherwise."},{"id":"plugins","group":"extend","name":"Plugin system","question":"Is there a plugin or extension system that bundles commands, agents, hooks, or MCP servers, beyond raw MCP configuration?","rubric":"YES if a plugin or extension format and an install mechanism (marketplace, registry, or install command) are documented. PARTIAL if extensions exist but only for a narrow purpose (for example themes or models only). NO otherwise."},{"id":"subagents","group":"extend","name":"Subagents","question":"Can the agent delegate work to subagents that run in their own context?","rubric":"YES if built-in or user-defined subagents or delegation with separate context are documented. PARTIAL if delegation exists only through an experimental flag or requires an external orchestrator. NO otherwise."},{"id":"project_instructions","group":"extend","name":"Project instruction file","question":"Does the agent read a project-level instruction file such as AGENTS.md, CLAUDE.md, GEMINI.md, or a rules file?","rubric":"YES if any project-level instruction file is documented as automatically loaded. PARTIAL if instructions must be passed manually each session. NO otherwise. Name the file or files in the notes."},{"id":"agents_md","group":"extend","name":"AGENTS.md support","question":"Does the agent read AGENTS.md specifically (the cross-tool open convention)?","rubric":"YES if AGENTS.md is documented as automatically loaded. PARTIAL if it is only loaded via a configurable alias or a symlink instruction. NO if the docs do not mention AGENTS.md."},{"id":"permission_modes","group":"control","name":"Permission modes","question":"Can users choose between approval levels for tool and command execution?","rubric":"YES if two or more named approval modes are documented (for example ask each time, auto-accept edits, full auto). PARTIAL if only a single on/off approval toggle exists. NO if every action is either always approved or always prompted with no configuration."},{"id":"sandbox","group":"control","name":"Built-in sandbox","question":"Does the agent sandbox shell commands at the OS level (filesystem or network isolation) without the user building their own container?","rubric":"YES if a built-in sandbox (seatbelt, bubblewrap, landlock, container, or network isolation) is documented as a feature. PARTIAL if the docs only recommend or provide an optional Docker image, or the sandbox covers one platform only. NO otherwise."},{"id":"checkpoints","group":"control","name":"Checkpoints and rewind","question":"Can the user rewind file changes made by the agent to an earlier point without relying on their own git commits?","rubric":"YES if automatic checkpoints, snapshots, or a rewind or undo command over agent edits are documented. PARTIAL if rewind relies on git commits the agent makes, or covers only the last edit. NO otherwise."},{"id":"plan_mode","group":"control","name":"Plan mode","question":"Is there a read-only planning mode where the agent explores and proposes before making changes?","rubric":"YES if a named plan or read-only mode is documented. PARTIAL if planning is only a prompt convention or a separate command that does not restrict edits. NO otherwise."},{"id":"full_auto","group":"control","name":"Full-auto mode","question":"Is there a documented mode that approves every action without prompting (for unattended runs)?","rubric":"YES if a flag or mode that skips all approvals is documented. PARTIAL if it exists only in headless mode or is restricted to sandboxed execution. NO otherwise."},{"id":"session_resume","group":"session","name":"Resume sessions","question":"Can the user resume or continue a previous conversation?","rubric":"YES if resuming or continuing sessions is documented (flag, command, or picker). PARTIAL if only the most recent session can be continued and older ones cannot be selected. NO otherwise."},{"id":"headless","group":"session","name":"Headless and CI mode","question":"Can the agent run non-interactively from scripts or CI, taking a prompt and exiting?","rubric":"YES if a non-interactive, print, or exec mode is documented. PARTIAL if non-interactive use requires piping through an unofficial workaround. NO otherwise."},{"id":"background_tasks","group":"session","name":"Background tasks","question":"Can long-running commands or tasks run in the background while the session continues?","rubric":"YES if background execution of commands or tasks is a documented feature. PARTIAL if only available for a specific task type or through an experimental flag. NO otherwise."},{"id":"parallel_agents","group":"session","name":"Parallel agents","question":"Is running multiple agent instances in parallel on one repository a documented, supported workflow?","rubric":"YES if the docs describe a supported parallel workflow (for example git worktree integration, cloud parallel runs, or a multi-agent runner). PARTIAL if the docs only say you may open several terminals. NO otherwise."},{"id":"model_selection","group":"model","name":"Model selection","question":"Can the user choose among two or more models?","rubric":"YES if switching between at least two models is documented. PARTIAL if only one model per plan or tier with no user control beyond that. NO if the model is fixed."},{"id":"byok_providers","group":"model","name":"Custom providers and BYOK","question":"Can the user bring their own API key or point the agent at a third-party or OpenAI-compatible endpoint?","rubric":"YES if third-party providers or custom endpoints are documented. PARTIAL if only the vendor's own alternative clouds (for example Bedrock, Vertex, Azure) are supported, or BYOK is limited to the vendor's own API. NO if the agent only works with the vendor's hosted service."},{"id":"local_models","group":"model","name":"Local models","question":"Can the agent use locally hosted models (Ollama, LM Studio, llama.cpp, vLLM)?","rubric":"YES if local model use is documented. PARTIAL if possible only via a generic OpenAI-compatible endpoint setting with no local-model documentation. NO otherwise."},{"id":"thinking_control","group":"model","name":"Reasoning control","question":"Can the user toggle or adjust the model's reasoning or thinking effort?","rubric":"YES if a documented setting or command controls thinking or reasoning effort. PARTIAL if reasoning is on or off only via choosing a different model. NO otherwise."},{"id":"cost_display","group":"model","name":"Token and cost display","question":"Does the agent show token usage or cost for the session?","rubric":"YES if a command, status line, or summary showing tokens or cost is documented. PARTIAL if only total tokens are shown with no cost, or only in a log file. NO otherwise."},{"id":"image_input","group":"io","name":"Image input","question":"Can the user give the agent images (paste, drag-and-drop, or file path)?","rubric":"YES if image input is documented. PARTIAL if images are supported only via a file path with a specific model, or only in an IDE surface rather than the CLI. NO otherwise."},{"id":"web_search","group":"io","name":"Built-in web search","question":"Does the agent have a built-in web search tool?","rubric":"YES if a web search tool ships with the agent. PARTIAL if web search is available only through an MCP server or an opt-in experimental flag. NO otherwise."},{"id":"web_fetch","group":"io","name":"Built-in URL fetch","question":"Does the agent have a built-in tool to fetch and read a URL?","rubric":"YES if a URL fetch or read tool ships with the agent. PARTIAL if only through an MCP server or an experimental flag. NO otherwise."},{"id":"ide_integration","group":"io","name":"Official IDE integration","question":"Is there an official IDE extension or integration (VS Code, JetBrains, or similar) for this agent?","rubric":"YES if an official extension or integration is documented. PARTIAL if the integration is community-maintained or only a terminal launcher. NO otherwise."},{"id":"git_pr_workflow","group":"io","name":"Git and PR workflow","question":"Are commit creation and pull request creation documented, first-class workflows?","rubric":"YES if the docs describe creating commits and pull requests as a supported workflow (built-in command or documented gh or git flow). PARTIAL if only commits are covered, or PR creation requires the user to install and wire up tooling with no documented flow. NO otherwise."},{"id":"auto_memory","group":"io","name":"Persistent memory","question":"Does the agent itself write and maintain persistent memory across sessions?","rubric":"YES if automatic cross-session memory written by the agent is documented. PARTIAL if memory is a user-maintained file the agent only reads, or an experimental flag. NO otherwise."},{"id":"windows_native","group":"platform","name":"Native Windows","question":"Does the agent run natively on Windows (PowerShell or cmd) without WSL?","rubric":"YES if native Windows support is documented. PARTIAL if Windows is supported only via WSL, or native support is marked experimental. NO if Windows is unsupported."},{"id":"open_source","group":"platform","name":"Open source","question":"Is the agent's source code available under an OSI-approved license?","rubric":"YES if the repository is published under an OSI-approved license (Apache-2.0, MIT, and so on). PARTIAL if source is available under a non-OSI or restrictive license. NO if the agent is closed source."},{"id":"free_tier","group":"platform","name":"Free tier","question":"Can the agent be used without paying (a free plan, free quota, or free with a free provider)?","rubric":"YES if a free plan or free quota is documented. PARTIAL if only a time-limited trial is offered, or free use requires a third-party free model via BYOK. NO if paid access is required."}],"values":{"yes":"The capability is documented as supported and generally available.","partial":"Supported with a documented limitation: experimental or preview, requires a workaround, a narrower form of the capability, or only through an add-on such as an MCP server.","no":"Documentation explicitly says it is not supported, or the capability is absent from the documentation after a thorough read.","unknown":"Could not be determined from documentation, or the evidence quote could not be verified against the source."},"cells":[],"changes":null};
+</script>
+<script>
+(function () {
+  const D = window.AGENTMATRIX;
+  if (!D) { document.getElementById('table-wrap').textContent = 'No data embedded. Run npm run build.'; return; }
+  const LABEL = { yes: 'Yes', partial: 'Partial', no: 'No', unknown: 'Unknown' };
+  const GLYPH = { yes: '✓', partial: '◐', no: '✕', unknown: '?' };
+  const byKey = new Map(D.cells.map((c) => [c.agent + '|' + c.capability, c]));
+  const agentById = new Map(D.agents.map((a) => [a.id, a]));
+  const capById = new Map(D.capabilities.map((c) => [c.id, c]));
+
+  const repoLink = document.getElementById('repo-link');
+  repoLink.href = (document.querySelector('meta[name="repo"]') || {}).content || 'https://github.com/' + (location.hostname.split('.')[0] || '') + '/' + (location.pathname.split('/')[1] || 'agentmatrix');
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+
+  const stats = document.getElementById('stats');
+  const verified = D.cells.filter((c) => c.verified).length;
+  const dates = D.cells.map((c) => c.verified_at).filter(Boolean).sort();
+  const counts = { yes: 0, partial: 0, no: 0, unknown: 0 };
+  D.cells.forEach((c) => { counts[c.value] = (counts[c.value] || 0) + 1; });
+  stats.innerHTML = '<span><b>' + D.agents.length + '</b> agents</span><span><b>' + D.capabilities.length + '</b> capabilities</span><span><b>' + verified + '/' + D.cells.length + '</b> cells verified at source</span><span>last verification <b>' + esc(dates.length ? dates[dates.length - 1] : 'never') + '</b></span>';
+
+  const theme = document.getElementById('theme');
+  const saved = localStorage.getItem('am-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+  theme.addEventListener('click', () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('am-theme', next);
+  });
+
+  const state = { group: null, q: '' };
+  const groupsEl = document.getElementById('groups');
+  const allChip = document.createElement('button');
+  allChip.type = 'button'; allChip.className = 'chip'; allChip.textContent = 'All'; allChip.setAttribute('aria-pressed', 'true');
+  allChip.addEventListener('click', () => { state.group = null; render(); });
+  groupsEl.appendChild(allChip);
+  D.groups.forEach((g) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = g.name; b.dataset.group = g.id; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => { state.group = state.group === g.id ? null : g.id; render(); });
+    groupsEl.appendChild(b);
+  });
+  document.getElementById('search').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+
+  function render() {
+    groupsEl.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.group || null) === state.group)));
+    const caps = D.capabilities.filter((c) => (!state.group || c.group === state.group) && (!state.q || (c.name + ' ' + c.question + ' ' + c.id).toLowerCase().includes(state.q)));
+    const head = '<tr><th scope="col">Capability</th>' + D.agents.map((a) => {
+      const cs = D.cells.filter((c) => c.agent === a.id);
+      const y = cs.filter((c) => c.value === 'yes').length, p = cs.filter((c) => c.value === 'partial').length;
+      return '<th scope="col">' + esc(a.name) + '<span class="count">' + y + ' yes · ' + p + ' partial</span></th>';
+    }).join('') + '</tr>';
+    let body = '';
+    D.groups.forEach((g) => {
+      const gc = caps.filter((c) => c.group === g.id);
+      if (!gc.length) return;
+      body += '<tr class="group"><th scope="row">' + esc(g.name) + '</th><td colspan="' + D.agents.length + '"></td></tr>';
+      gc.forEach((cap) => {
+        body += '<tr><th scope="row" title="' + esc(cap.question) + '">' + esc(cap.name) + '</th>';
+        D.agents.forEach((a) => {
+          const cell = byKey.get(a.id + '|' + cap.id) || { value: 'unknown', verified: false };
+          const v = cell.value || 'unknown';
+          const cls = 'v ' + v + (v !== 'unknown' && !cell.verified ? ' unverified' : '');
+          const label = esc(a.name) + ' — ' + esc(cap.name) + ': ' + LABEL[v] + (cell.verified ? ', verified ' + esc(cell.verified_at) : '');
+          body += '<td class="cell"><button type="button" class="' + cls + '" data-a="' + esc(a.id) + '" data-c="' + esc(cap.id) + '" aria-label="' + label + '">' + GLYPH[v] + '</button></td>';
+        });
+        body += '</tr>';
+      });
+    });
+    document.getElementById('table-wrap').innerHTML = '<table><thead>' + head + '</thead><tbody>' + (body || '<tr><td colspan="' + (D.agents.length + 1) + '" style="padding:16px;color:var(--text-2)">No capabilities match.</td></tr>') + '</tbody></table>';
+  }
+
+  document.getElementById('table-wrap').addEventListener('click', (e) => {
+    const b = e.target.closest('button.v');
+    if (!b) return;
+    openCell(b.dataset.a, b.dataset.c);
+  });
+
+  const dlg = document.getElementById('dlg');
+  document.getElementById('dlg-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+
+  function openCell(agentId, capId) {
+    const a = agentById.get(agentId), cap = capById.get(capId);
+    const cell = byKey.get(agentId + '|' + capId) || { value: 'unknown', quote: '', evidence_url: '', notes: '', confidence: '', verified: false, verified_at: '' };
+    document.getElementById('dlg-title').textContent = a.name + ' · ' + cap.name;
+    document.getElementById('dlg-q').textContent = cap.question;
+    let html = '<span class="pill ' + cell.value + '">' + LABEL[cell.value] + '</span>';
+    if (cell.notes) html += '<p>' + esc(cell.notes) + '</p>';
+    if (cell.quote) html += '<blockquote>“' + esc(cell.quote) + '”</blockquote>';
+    html += '<div class="meta">';
+    if (cell.evidence_url) html += '<span>Source</span><a href="' + esc(cell.evidence_url) + '" target="_blank" rel="noopener">' + esc(cell.evidence_url) + '</a>';
+    html += '<span>Verified</span><span>' + (cell.verified ? 'quote found at source on ' + esc(cell.verified_at) : 'not verified — shown as unknown') + '</span>';
+    if (cell.confidence) html += '<span>Confidence</span><span>' + esc(cell.confidence) + '</span>';
+    html += '<span>Rubric</span><span>' + esc(cap.rubric) + '</span>';
+    html += '</div>';
+    html += '<p class="q" style="margin-top:14px">Wrong? <a href="' + repoLink.href + '/issues/new?template=wrong-cell.yml&title=' + encodeURIComponent('Wrong cell: ' + a.name + ' / ' + cap.name) + '" target="_blank" rel="noopener">Report this cell</a> with a link to the docs.</p>';
+    document.getElementById('dlg-body').innerHTML = html;
+    dlg.showModal();
+  }
+
+  const ch = document.getElementById('changes');
+  if (D.changes && D.changes.changes && D.changes.changes.length) {
+    const items = D.changes.changes.slice(0, 20).map((c) => {
+      const a = agentById.get(c.agent), cap = capById.get(c.capability);
+      return '<div><b>' + esc(a ? a.name : c.agent) + '</b> · ' + esc(cap ? cap.name : c.capability) + ': <span class="from">' + LABEL[c.from] + '</span> → <span class="to">' + LABEL[c.to] + '</span>' + (c.evidence_url ? ' · <a href="' + esc(c.evidence_url) + '" target="_blank" rel="noopener">source</a>' : '') + '</div>';
+    }).join('');
+    ch.innerHTML = '<h2>Changed in the last verification run (' + esc((D.changes.run_at || '').slice(0, 10)) + ')</h2><div class="chg">' + items + '</div>';
+  } else {
+    ch.innerHTML = '<h2>Recent changes</h2><p class="q">No value changes in the last verification run.</p>';
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

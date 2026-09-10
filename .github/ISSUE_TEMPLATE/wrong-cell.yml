@@ -1,0 +1,40 @@
+name: Wrong cell
+description: A cell in the matrix does not match the documentation
+title: "Wrong cell: <agent> / <capability>"
+labels: [wrong-cell]
+body:
+  - type: input
+    id: agent
+    attributes:
+      label: Agent
+      placeholder: e.g. Gemini CLI
+    validations:
+      required: true
+  - type: input
+    id: capability
+    attributes:
+      label: Capability
+      placeholder: e.g. Lifecycle hooks
+    validations:
+      required: true
+  - type: dropdown
+    id: value
+    attributes:
+      label: What should the value be?
+      options: [yes, partial, no, unknown]
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link to the official documentation that shows it
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: quote
+    attributes:
+      label: The exact sentence from that page
+      description: Copy it verbatim; it becomes the evidence quote for the cell.
+    validations:
+      required: true

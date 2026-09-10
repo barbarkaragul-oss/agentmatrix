@@ -1,0 +1,58 @@
+name: Weekly verification
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Only re-verify one agent id (blank = all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: weekly-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Re-verify the matrix with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENTMATRIX_MODEL: ${{ vars.AGENTMATRIX_MODEL }}
+        run: |
+          if [ -n "${{ github.event.inputs.agent }}" ]; then
+            npm run verify -- --agent "${{ github.event.inputs.agent }}"
+          else
+            npm run verify
+          fi
+      - name: Regenerate README tables and site
+        run: npm run build
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/weekly-verification
+          delete-branch: true
+          commit-message: 'matrix: weekly re-verification'
+          title: 'matrix: weekly re-verification'
+          body-path: data/changes.md
+          labels: weekly-verification
+          add-paths: |
+            data/matrix.json
+            data/changes.json
+            data/changes.md
+            README.md
+            docs/

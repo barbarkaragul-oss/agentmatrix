@@ -1,0 +1,106 @@
+{
+  "agents": [
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "vendor": "Anthropic",
+      "homepage": "https://code.claude.com/docs/en/overview",
+      "repo": "https://github.com/anthropics/claude-code",
+      "sources": [
+        "https://code.claude.com/docs/en/overview",
+        "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
+      ]
+    },
+    {
+      "id": "codex-cli",
+      "name": "Codex CLI",
+      "vendor": "OpenAI",
+      "homepage": "https://developers.openai.com/codex/cli",
+      "repo": "https://github.com/openai/codex",
+      "sources": [
+        "https://raw.githubusercontent.com/openai/codex/main/README.md",
+        "https://developers.openai.com/codex/cli"
+      ]
+    },
+    {
+      "id": "gemini-cli",
+      "name": "Gemini CLI",
+      "vendor": "Google",
+      "homepage": "https://geminicli.com",
+      "repo": "https://github.com/google-gemini/gemini-cli",
+      "sources": [
+        "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md"
+      ]
+    },
+    {
+      "id": "cursor-cli",
+      "name": "Cursor CLI",
+      "vendor": "Cursor",
+      "homepage": "https://cursor.com/cli",
+      "repo": null,
+      "sources": [
+        "https://cursor.com/docs/cli/overview"
+      ]
+    },
+    {
+      "id": "copilot-cli",
+      "name": "GitHub Copilot CLI",
+      "vendor": "GitHub",
+      "homepage": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli",
+      "repo": "https://github.com/github/copilot-cli",
+      "sources": [
+        "https://raw.githubusercontent.com/github/copilot-cli/main/README.md"
+      ]
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "vendor": "Cline",
+      "homepage": "https://cline.bot",
+      "repo": "https://github.com/cline/cline",
+      "sources": [
+        "https://raw.githubusercontent.com/cline/cline/main/README.md"
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "vendor": "Anomaly (SST)",
+      "homepage": "https://opencode.ai",
+      "repo": "https://github.com/sst/opencode",
+      "sources": [
+        "https://opencode.ai/docs/"
+      ]
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "vendor": "Block",
+      "homepage": "https://block.github.io/goose/",
+      "repo": "https://github.com/block/goose",
+      "sources": [
+        "https://block.github.io/goose/docs/"
+      ]
+    },
+    {
+      "id": "aider",
+      "name": "Aider",
+      "vendor": "Aider AI",
+      "homepage": "https://aider.chat",
+      "repo": "https://github.com/Aider-AI/aider",
+      "sources": [
+        "https://aider.chat/docs/"
+      ]
+    },
+    {
+      "id": "amp",
+      "name": "Amp",
+      "vendor": "Sourcegraph",
+      "homepage": "https://ampcode.com",
+      "repo": null,
+      "sources": [
+        "https://ampcode.com/manual"
+      ]
+    }
+  ]
+}

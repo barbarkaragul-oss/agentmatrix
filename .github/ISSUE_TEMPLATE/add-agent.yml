@@ -1,0 +1,31 @@
+name: Add an agent
+description: Propose a coding agent CLI for the matrix
+title: "Add agent: <name>"
+labels: [add-agent, good first issue]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Agent name and vendor
+    validations:
+      required: true
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Documentation URLs the pipeline should read
+      description: One per line. Prefer raw markdown on GitHub or static docs pages, plus the changelog.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: It is a CLI or terminal agent (not an IDE-only product)
+          required: true

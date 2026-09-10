@@ -1,0 +1,28 @@
+{
+  "name": "agentmatrix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Which AI coding agent supports what? Every cell cited from official docs, re-verified weekly by Claude.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.10"
+  },
+  "scripts": {
+    "check": "tsx src/check.ts",
+    "verify": "tsx src/verify.ts",
+    "build": "tsx src/generate.ts",
+    "test": "node --import tsx --test \"tests/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
