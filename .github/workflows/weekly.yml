@@ -40,8 +40,8 @@ jobs:
       AGENT_INPUT: ${{ github.event.inputs.agent || '' }}
       HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -124,7 +124,7 @@ jobs:
 
       - name: Open pull request (value changes, or the direct push was rejected)
         if: steps.changes.outputs.count != '0' || steps.commit.outcome == 'failure'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: bot/weekly-verification
           delete-branch: true
@@ -151,7 +151,7 @@ jobs:
 
       - name: Open or update the issue for cells that need a human (free mode)
         if: steps.changes.outputs.count != '0' && steps.mode.outputs.mode == 'free'
-        uses: peter-evans/create-issue-from-file@v5
+        uses: peter-evans/create-issue-from-file@v6
         with:
           issue-number: ${{ steps.issue.outputs.number }}
           title: 'Docs changed: ${{ steps.changes.outputs.count }} cell(s) need a fresh quote'
