@@ -127,28 +127,52 @@ function estimateCost(model: string, u: Usage): string {
   return `about $${usd.toFixed(2)} (list prices, approximate)`;
 }
 
+/**
+ * Splits a character budget across sources so that small pages stay whole and only the large
+ * ones are truncated, evenly ("water filling"). Returns the allowed length per source.
+ */
+export function allocateBudget(lengths: number[], perSourceMax: number, total: number): number[] {
+  const caps = lengths.map((n) => Math.min(n, perSourceMax));
+  const allowed = [...caps];
+  let remaining = total;
+  let open = caps.map((_, i) => i);
+  while (open.length > 0) {
+    const share = Math.floor(remaining / open.length);
+    const fits = open.filter((i) => caps[i]! <= share);
+    if (fits.length === 0) {
+      for (const i of open) allowed[i] = share;
+      break;
+    }
+    for (const i of fits) {
+      allowed[i] = caps[i]!;
+      remaining -= caps[i]!;
+    }
+    open = open.filter((i) => caps[i]! > share);
+  }
+  return allowed;
+}
+
 async function loadSources(agent: Agent, fetcher: Fetcher): Promise<{ sources: SourceText[]; prepared: Map<string, PreparedText>; failures: string[] }> {
   const results = await Promise.all(agent.sources.map((u) => fetcher.get(u)));
   const sources: SourceText[] = [];
   const prepared = new Map<string, PreparedText>();
   const failures: string[] = [];
-  let total = 0;
-  for (const r of results) {
-    if (!r.ok || r.text.length < MIN_SOURCE_CHARS) {
-      failures.push(`${r.url} (${r.error ?? `HTTP ${r.status}`}${r.ok ? ', too little text' : ''})`);
-      continue;
-    }
-    const room = Math.max(0, MAX_TOTAL_CHARS - total);
-    const limit = Math.min(MAX_SOURCE_CHARS, room);
-    const text = r.text.length > limit ? r.text.slice(0, limit) : r.text;
-    if (text.length < MIN_SOURCE_CHARS) {
+  const usable = results.filter((r) => {
+    if (r.ok && r.text.length >= MIN_SOURCE_CHARS) return true;
+    failures.push(`${r.url} (${r.error ?? `HTTP ${r.status}`}${r.ok ? ', too little text' : ''})`);
+    return false;
+  });
+  const allowed = allocateBudget(usable.map((r) => r.text.length), MAX_SOURCE_CHARS, MAX_TOTAL_CHARS);
+  usable.forEach((r, i) => {
+    const limit = allowed[i] ?? 0;
+    if (limit < MIN_SOURCE_CHARS) {
       failures.push(`${r.url} (dropped: total size budget exhausted)`);
-      continue;
+      return;
     }
-    total += text.length;
+    const text = r.text.length > limit ? r.text.slice(0, limit) : r.text;
     sources.push({ url: r.url, text, truncated: text.length < r.text.length });
     prepared.set(toFetchableUrl(r.url), prepareText(text));
-  }
+  });
   return { sources, prepared, failures };
 }
 

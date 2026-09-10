@@ -11,9 +11,21 @@ import { DOCS_DIR, ROOT, cellKey, isHttpUrl, loadAgents, loadCapabilities, loadC
 const ICON: Record<Value, string> = { yes: '✅', partial: '🟡', no: '❌', unknown: '❔' };
 const LABEL: Record<Value, string> = { yes: 'yes', partial: 'partial', no: 'no', unknown: 'unknown' };
 
-/** Link title for a README cell: double quotes would end the title and a backslash would escape its closing quote. */
+/**
+ * Link title for a README cell (shown as a tooltip, so markdown does not render there): markdown
+ * links and emphasis are reduced to their text, double quotes would end the title and a backslash
+ * would escape its closing quote. The stored quote itself stays verbatim.
+ */
 export function mdTitle(s: string, max = 180): string {
-  const t = s.replace(/\s+/g, ' ').replace(/"/g, "'").replace(/\\/g, '/').trim();
+  const t = s
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/(\*\*|__)(.+?)\1/g, '$2')
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/\s+/g, ' ')
+    .replace(/"/g, "'")
+    .replace(/\\/g, '/')
+    .trim();
   return t.length > max ? t.slice(0, max - 1) + '…' : t;
 }
 

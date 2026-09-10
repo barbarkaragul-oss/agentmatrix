@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { embedData, renderMatrixMarkdown, replaceBetween } from '../src/generate.js';
+import { embedData, mdTitle, renderMatrixMarkdown, replaceBetween } from '../src/generate.js';
+
+test('mdTitle reduces markdown to plain tooltip text and neutralises quote-breaking characters', () => {
+  assert.equal(mdTitle('Configure slash commands in your [configuration file](/docs/guides/config-files). List the `command` **without** the `/`.'), "Configure slash commands in your configuration file. List the command without the /.");
+  assert.equal(mdTitle('say "hi" C:\\path'), "say 'hi' C:/path");
+  assert.equal(mdTitle('x'.repeat(200)).length, 180);
+});
 import type { Agent, Cell } from '../src/types.js';
 
 test('embedData keeps $ sequences and neutralises script terminators', () => {

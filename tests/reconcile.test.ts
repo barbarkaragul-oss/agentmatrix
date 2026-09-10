@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { reconcile, type ModelCell } from '../src/verify.js';
+import { allocateBudget, reconcile, type ModelCell } from '../src/verify.js';
+
+test('allocateBudget keeps small sources whole and truncates large ones evenly', () => {
+  assert.deepEqual(allocateBudget([10, 20, 30], 100, 1000), [10, 20, 30]);
+  assert.deepEqual(allocateBudget([500, 100, 900, 50], 400, 600), [225, 100, 225, 50]);
+  assert.deepEqual(allocateBudget([1000, 1000], 300, 800), [300, 300]);
+  assert.deepEqual(allocateBudget([], 300, 800), []);
+});
 import { prepareText } from '../src/quotes.js';
 import { cellKey, type Capability, type Cell } from '../src/types.js';
 
