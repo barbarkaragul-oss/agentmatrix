@@ -4,7 +4,7 @@ title: "AgentMatrix: a cited feature matrix of AI coding agent CLIs"
 type: dataset
 authors:
   - name: "AgentMatrix contributors"
-repository-code: "https://github.com/OWNER/agentmatrix"
-url: "https://OWNER.github.io/agentmatrix/"
+repository-code: "https://github.com/barbarkaragul-oss/agentmatrix"
+url: "https://barbarkaragul-oss.github.io/agentmatrix/"
 license: MIT
 date-released: "2026-09-10"

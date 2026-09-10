@@ -3,15 +3,15 @@
 <p align="center"><b>Which AI coding agent supports what?</b><br>Every cell quotes the vendor's own documentation. Every quote is re-checked against its source weekly, and cells are re-derived with Claude by anyone with an API key when the documentation changes.</p>
 
 <p align="center">
-  <a href="https://OWNER.github.io/agentmatrix/">Interactive matrix</a> ·
+  <a href="https://barbarkaragul-oss.github.io/agentmatrix/">Interactive matrix</a> ·
   <a href="docs/matrix.json">Raw JSON</a> ·
   <a href="#contributing">Add an agent</a> ·
   <a href="#how-it-works">How it works</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/OWNER/agentmatrix/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/OWNER/agentmatrix/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/OWNER/agentmatrix/actions/workflows/weekly.yml"><img alt="Weekly verification" src="https://github.com/OWNER/agentmatrix/actions/workflows/weekly.yml/badge.svg"></a>
+  <a href="https://github.com/barbarkaragul-oss/agentmatrix/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/barbarkaragul-oss/agentmatrix/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/barbarkaragul-oss/agentmatrix/actions/workflows/weekly.yml"><img alt="Weekly verification" src="https://github.com/barbarkaragul-oss/agentmatrix/actions/workflows/weekly.yml/badge.svg"></a>
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg">
 </p>
 
@@ -21,11 +21,11 @@
 
 "Does Codex CLI have hooks? Can Gemini CLI act as an MCP server? Which of these run natively on Windows?" Answers to questions like these are usually given from memory, and comparison tables are rarely dated or sourced. This repository answers from the documentation, and shows its work:
 
-- **Every value has a receipt.** Each cell stores the sentence from the vendor's documentation that justifies it, the URL of that page, and the date the sentence was last found there. On the [interactive site](https://OWNER.github.io/agentmatrix/) click any cell to read it; in the tables below hover a cell for the quote and click to open the source.
+- **Every value has a receipt.** Each cell stores the sentence from the vendor's documentation that justifies it, the URL of that page, and the date the sentence was last found there. On the [interactive site](https://barbarkaragul-oss.github.io/agentmatrix/) click any cell to read it; in the tables below hover a cell for the quote and click to open the source.
 - **Quotes are re-checked every week, for free.** A GitHub Action re-fetches every source page and searches for every quote. A quote that has disappeared demotes its cell to *unknown* and opens an issue. That catches rewritten or removed documentation; it cannot catch a feature that was removed while an old changelog entry still describes it, which is what the rubric, human review and the wrong-cell issues are for. Matching tolerates formatting differences (whitespace, capitalisation, punctuation, smart quotes, markdown emphasis, inline HTML tags), not wording differences.
 - **Cells are re-derived by Claude, on demand.** When documentation changes, a maintainer or contributor runs the pipeline with their own API key: Claude reads the agent's documentation in one request, decides every capability against a written rubric, and returns a quote per cell that is then verified mechanically. Humans review the resulting pull request row by row.
 
-The mechanical check proves that a sentence exists on a page. Whether the sentence supports the value is a judgment made by the rubric, the model, and the reviewers, in that order. Cells are open to challenge: [report one](https://github.com/OWNER/agentmatrix/issues/new?template=wrong-cell.yml) with a link to the docs.
+The mechanical check proves that a sentence exists on a page. Whether the sentence supports the value is a judgment made by the rubric, the model, and the reviewers, in that order. Cells are open to challenge: [report one](https://github.com/barbarkaragul-oss/agentmatrix/issues/new?template=wrong-cell.yml) with a link to the docs.
 
 One cell, in full, as stored in [`data/matrix.json`](data/matrix.json):
 
@@ -52,7 +52,7 @@ This project is independent: it is not affiliated with Anthropic or with any of 
 ## The matrix
 
 <!-- matrix:start -->
-Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote (for ❌ cells, the explanation); click it to open the source. On mobile, use the [interactive matrix](https://OWNER.github.io/agentmatrix/).
+Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote (for ❌ cells, the explanation); click it to open the source. On mobile, use the [interactive matrix](https://barbarkaragul-oss.github.io/agentmatrix/).
 
 ### Extensibility
 
@@ -169,7 +169,7 @@ Design choices worth knowing:
 Requires Node.js 22 or newer (the version CI uses).
 
 ```bash
-git clone https://github.com/OWNER/agentmatrix && cd agentmatrix
+git clone https://github.com/barbarkaragul-oss/agentmatrix && cd agentmatrix
 npm install
 npm test                       # unit tests, no network
 npm run check                  # verify every quote against its source (about 200 pages, one to two minutes, no API key)
@@ -191,7 +191,7 @@ npm run verify                    # all agents, then: npm run build
 - **Add an agent:** append it to [`data/agents.json`](data/agents.json) with the documentation URLs the pipeline should read (prefer raw markdown on GitHub or static docs pages). Then either run `npm run verify -- --agent <id>` with your own API key, fill the cells by hand in `data/matrix.json`, or open the pull request with the entry alone: its cells start as *unknown* and anyone with a key can fill them in a follow-up. Finish with `npm run check` and `npm run build`.
 - **Fix a cell:** edit its `value`, `quote`, `evidence_url` and `notes` in `data/matrix.json`. The quote must appear verbatim on the page. CI runs `npm run check` on every pull request.
 - **Add a capability:** append it to `data/capabilities.json` with a question and an unambiguous rubric, then run `npm run verify` (or open the PR with the capability alone and let the weekly run fill it).
-- **Report a wrong cell:** [open an issue](https://github.com/OWNER/agentmatrix/issues/new?template=wrong-cell.yml) with a link to the docs.
+- **Report a wrong cell:** [open an issue](https://github.com/barbarkaragul-oss/agentmatrix/issues/new?template=wrong-cell.yml) with a link to the docs.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the data format.
 

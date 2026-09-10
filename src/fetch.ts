@@ -29,7 +29,7 @@ export interface FetchOptions {
   maxBytes?: number;
 }
 
-const DEFAULT_UA = 'agentmatrix-bot/0.1 (docs quote verification; https://github.com/OWNER/agentmatrix)';
+const DEFAULT_UA = 'agentmatrix-bot/0.1 (docs quote verification; https://github.com/barbarkaragul-oss/agentmatrix)';
 
 export function toFetchableUrl(url: string): string {
   let u: URL;

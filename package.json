@@ -7,9 +7,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OWNER/agentmatrix"
+    "url": "https://github.com/barbarkaragul-oss/agentmatrix"
   },
-  "homepage": "https://OWNER.github.io/agentmatrix/",
+  "homepage": "https://barbarkaragul-oss.github.io/agentmatrix/",
   "engines": {
     "node": ">=22"
   },

@@ -39,7 +39,7 @@ export function replaceBetween(source: string, start: string, end: string, body:
 export function renderMatrixMarkdown(agents: Agent[], caps: ReturnType<typeof loadCapabilities>, cells: Cell[]): string {
   const byKey = new Map(cells.map((c) => [cellKey(c.agent, c.capability), c]));
   const out: string[] = [];
-  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote (for ❌ cells, the explanation); click it to open the source. On mobile, use the [interactive matrix](https://OWNER.github.io/agentmatrix/).');
+  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote (for ❌ cells, the explanation); click it to open the source. On mobile, use the [interactive matrix](https://barbarkaragul-oss.github.io/agentmatrix/).');
   out.push('');
   for (const group of caps.groups) {
     const groupCaps = caps.capabilities.filter((c) => c.group === group.id);
