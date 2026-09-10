@@ -159,14 +159,18 @@
   D.cells.forEach((c) => { counts[c.value] = (counts[c.value] || 0) + 1; });
   stats.innerHTML = '<span><b>' + D.agents.length + '</b> agents</span><span><b>' + D.capabilities.length + '</b> capabilities</span><span><b>' + verified + '/' + D.cells.length + '</b> cells verified at source</span><span>last verification <b>' + esc(dates.length ? dates[dates.length - 1] : 'never') + '</b></span>';
 
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable (file:, data:, private mode) */ } },
+  };
   const theme = document.getElementById('theme');
-  const saved = localStorage.getItem('am-theme');
+  const saved = store.get('am-theme');
   if (saved) document.documentElement.dataset.theme = saved;
   theme.addEventListener('click', () => {
     const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const next = cur === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    localStorage.setItem('am-theme', next);
+    store.set('am-theme', next);
   });
 
   const state = { group: null, q: '' };
