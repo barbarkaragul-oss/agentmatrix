@@ -15,6 +15,10 @@
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg">
 </p>
 
+<p align="center">
+  <a href="https://barbarkaragul-oss.github.io/agentmatrix/"><img src="docs/screenshot.png" alt="The interactive matrix: 10 agents by 32 capabilities, every cell colour-coded yes, partial or no, and clickable to its source quote" width="900"></a>
+</p>
+
 <!-- stats:start -->
 **10 agents × 32 capabilities · 320/320 cells verified against their source · last verification 2026-09-10** · ✅ 228 · 🟡 58 · ❌ 34 · ❔ 0
 <!-- stats:end -->
