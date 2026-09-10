@@ -1,18 +1,24 @@
 /**
  * Offline verification of the matrix: does every quote really appear at its evidence URL?
  *
- *   npm run check                 report only, exit 1 on any failure
- *   npm run check -- --soft       report only, always exit 0
- *   npm run check -- --fix        rewrite data/matrix.json: passing cells -> verified today,
- *                                 failing cells -> value "unknown", verified false
+ *   npm run check                 report; exit 1 if any quote is missing from a fetched page
+ *   npm run check -- --soft       report; always exit 0
+ *   npm run check -- --fix        rewrite data/matrix.json: quotes found -> verified today;
+ *                                 quotes missing from a fetched page -> value "unknown" (the old
+ *                                 quote, URL and value are kept in the notes for a human to fix);
+ *                                 also writes data/changes.json and data/changes.md
  *   npm run check -- --agent id   limit to one agent
  *
- * No API key needed. This is the same mechanical check the weekly pipeline applies to the
- * model's output, so contributors can run it on hand-written data before opening a PR.
+ * A page that cannot be fetched (timeout, 5xx, bot block) is reported as an error and never
+ * demotes a cell: only a successfully fetched page that no longer contains the quote does.
+ * No API key needed. This is the free weekly re-verification, and the same check CI runs on
+ * pull requests that edit the data.
  */
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { diffMatrices, renderChangesMarkdown } from './diff.js';
 import { Fetcher } from './fetch.js';
-import { findQuote, prepareText, quoteProblems, type MatchMethod } from './quotes.js';
+import { findQuote, prepareText, quoteProblems, type MatchMethod, type PreparedText } from './quotes.js';
 import {
   DATA_DIR,
   cellKey,
@@ -22,21 +28,34 @@ import {
   saveJson,
   sortCells,
   todayIso,
+  type Agent,
+  type Capability,
   type Cell,
+  type ChangesFile,
 } from './types.js';
 
-interface CellReport {
+export type CellStatus = 'ok' | 'fail' | 'error' | 'skipped';
+
+export interface CellReport {
   agent: string;
   capability: string;
   value: string;
-  status: 'ok' | 'fail' | 'skipped';
+  status: CellStatus;
   method: MatchMethod;
   evidence_url: string;
   problems: string[];
 }
 
-function parseArgs(argv: string[]): { soft: boolean; fix: boolean; agent: string | null } {
-  const out = { soft: false, fix: false, agent: null as string | null };
+export type PageResult = PreparedText | { error: string };
+
+export interface CheckOptions {
+  soft: boolean;
+  fix: boolean;
+  agent: string | null;
+}
+
+function parseArgs(argv: string[]): CheckOptions {
+  const out: CheckOptions = { soft: false, fix: false, agent: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--soft') out.soft = true;
@@ -50,95 +69,112 @@ function parseArgs(argv: string[]): { soft: boolean; fix: boolean; agent: string
   return out;
 }
 
-export async function runCheck(opts: { soft: boolean; fix: boolean; agent: string | null }): Promise<number> {
+export function classifyCell(cell: Cell, page: PageResult | undefined): CellReport {
+  const base = { agent: cell.agent, capability: cell.capability, value: cell.value, evidence_url: cell.evidence_url };
+  if (!cell.quote.trim() || !cell.evidence_url.trim()) return { ...base, status: 'skipped', method: 'none', problems: [] };
+  const problems = quoteProblems(cell.quote);
+  if (!page) return { ...base, status: 'error', method: 'none', problems: [...problems, 'page not fetched'] };
+  if ('error' in page) return { ...base, status: 'error', method: 'none', problems: [...problems, `fetch failed: ${page.error}`] };
+  const m = findQuote(page, cell.quote);
+  if (!m.found) problems.push('quote not found on page');
+  return { ...base, status: problems.length ? 'fail' : 'ok', method: m.method, problems };
+}
+
+export function structuralProblems(cells: Cell[], agents: Agent[], capabilities: Capability[]): { problems: string[]; missing: string[] } {
+  const agentIds = new Set(agents.map((a) => a.id));
+  const capIds = new Set(capabilities.map((c) => c.id));
+  const problems: string[] = [];
+  const seen = new Set<string>();
+  for (const cell of cells) {
+    const key = cellKey(cell.agent, cell.capability);
+    if (seen.has(key)) problems.push(`duplicate cell ${key}`);
+    seen.add(key);
+    if (!agentIds.has(cell.agent)) problems.push(`unknown agent ${cell.agent}`);
+    if (!capIds.has(cell.capability)) problems.push(`unknown capability ${cell.capability}`);
+    if (cell.value !== 'unknown' && (!cell.quote.trim() || !cell.evidence_url.trim())) problems.push(`${key}: value ${cell.value} requires quote and evidence_url`);
+    if (cell.value === 'unknown' && cell.verified) problems.push(`${key}: unknown cells cannot be verified`);
+  }
+  const missing: string[] = [];
+  for (const a of agents) for (const c of capabilities) if (!seen.has(cellKey(a.id, c.id))) missing.push(cellKey(a.id, c.id));
+  return { problems, missing };
+}
+
+/** Applies check results to the cells: ok -> verified today; fail -> unknown (old data kept in notes); error/skipped -> untouched. */
+export function applyFix(cells: Cell[], reports: CellReport[], missing: string[], today: string): { cells: Cell[]; demoted: number } {
+  const byKey = new Map(reports.map((r) => [cellKey(r.agent, r.capability), r]));
+  let demoted = 0;
+  const out: Cell[] = cells.map((cell) => {
+    const r = byKey.get(cellKey(cell.agent, cell.capability));
+    if (!r) return cell;
+    if (r.status === 'fail') {
+      demoted++;
+      const tail = cell.notes.trim() ? ` | ${cell.notes.trim()}` : '';
+      return {
+        ...cell,
+        value: 'unknown',
+        quote: '',
+        evidence_url: '',
+        confidence: 'low',
+        verified: false,
+        verified_at: '',
+        notes: `UNVERIFIED on ${today} (${r.problems.join('; ')}; was ${cell.value}): "${cell.quote.trim()}" at ${cell.evidence_url}${tail}`,
+      };
+    }
+    if (r.status === 'ok' && cell.value !== 'unknown') return { ...cell, verified: true, verified_at: today };
+    if (cell.value === 'unknown' && cell.verified) return { ...cell, verified: false, verified_at: '' };
+    return cell;
+  });
+  for (const key of missing) {
+    const [agent, capability] = key.split('|') as [string, string];
+    out.push({ agent, capability, value: 'unknown', quote: '', evidence_url: '', notes: '', confidence: 'low', verified: false, verified_at: '' });
+  }
+  return { cells: out, demoted };
+}
+
+export async function runCheck(opts: CheckOptions): Promise<number> {
   const agents = loadAgents();
   const caps = loadCapabilities();
   const matrix = loadMatrix();
-  const agentIds = new Set(agents.map((a) => a.id));
-  const capIds = new Set(caps.capabilities.map((c) => c.id));
-
-  const structural: string[] = [];
-  const seen = new Set<string>();
-  for (const cell of matrix.cells) {
-    const key = cellKey(cell.agent, cell.capability);
-    if (seen.has(key)) structural.push(`duplicate cell ${key}`);
-    seen.add(key);
-    if (!agentIds.has(cell.agent)) structural.push(`unknown agent ${cell.agent}`);
-    if (!capIds.has(cell.capability)) structural.push(`unknown capability ${cell.capability}`);
-    if (cell.value !== 'unknown' && (!cell.quote.trim() || !cell.evidence_url.trim())) {
-      structural.push(`${key}: value ${cell.value} requires quote and evidence_url`);
-    }
-    if (cell.value === 'unknown' && cell.verified) structural.push(`${key}: unknown cells cannot be verified`);
-  }
-  const missing: string[] = [];
-  for (const a of agents) {
-    for (const c of caps.capabilities) {
-      if (!seen.has(cellKey(a.id, c.id))) missing.push(cellKey(a.id, c.id));
-    }
-  }
+  const { problems: structural, missing } = structuralProblems(matrix.cells, agents, caps.capabilities);
 
   const targets = matrix.cells.filter((c) => !opts.agent || c.agent === opts.agent);
   const fetcher = new Fetcher({}, 4);
-  const reports: CellReport[] = [];
   const cellsToCheck = targets.filter((c) => c.quote.trim() && c.evidence_url.trim());
-  const skipped = targets.filter((c) => !(c.quote.trim() && c.evidence_url.trim()));
-
   const urls = [...new Set(cellsToCheck.map((c) => c.evidence_url))];
-  console.log(`Checking ${cellsToCheck.length} quoted cells across ${urls.length} URLs (${skipped.length} cells without a quote skipped)`);
+  console.log(`Checking ${cellsToCheck.length} quoted cells across ${urls.length} URLs (${targets.length - cellsToCheck.length} cells without a quote skipped)`);
 
-  const prepared = new Map<string, ReturnType<typeof prepareText> | { error: string }>();
+  const pages = new Map<string, PageResult>();
   await Promise.all(
     urls.map(async (url) => {
       const res = await fetcher.get(url);
       if (!res.ok) {
-        prepared.set(url, { error: res.error ?? `HTTP ${res.status}` });
-        console.log(`  FETCH FAIL ${url} (${res.error ?? res.status})`);
+        pages.set(url, { error: res.error ?? `HTTP ${res.status}` });
+        console.log(`  FETCH ERROR ${url} (${res.error ?? res.status})`);
       } else {
-        prepared.set(url, prepareText(res.text));
+        pages.set(url, prepareText(res.text));
       }
     }),
   );
 
-  for (const cell of cellsToCheck) {
-    const problems = quoteProblems(cell.quote);
-    const page = prepared.get(cell.evidence_url);
-    let method: MatchMethod = 'none';
-    if (!page) problems.push('page not fetched');
-    else if ('error' in page) problems.push(`fetch failed: ${page.error}`);
-    else {
-      const m = findQuote(page, cell.quote);
-      method = m.method;
-      if (!m.found) problems.push('quote not found on page');
-    }
-    reports.push({
-      agent: cell.agent,
-      capability: cell.capability,
-      value: cell.value,
-      status: problems.length === 0 ? 'ok' : 'fail',
-      method,
-      evidence_url: cell.evidence_url,
-      problems,
-    });
-  }
-  for (const cell of skipped) {
-    reports.push({ agent: cell.agent, capability: cell.capability, value: cell.value, status: 'skipped', method: 'none', evidence_url: cell.evidence_url, problems: [] });
-  }
-
+  const reports = targets.map((cell) => classifyCell(cell, pages.get(cell.evidence_url)));
   const failures = reports.filter((r) => r.status === 'fail');
+  const errors = reports.filter((r) => r.status === 'error');
   const okCount = reports.filter((r) => r.status === 'ok').length;
+  const skipped = reports.filter((r) => r.status === 'skipped').length;
   for (const f of failures) console.log(`  FAIL ${f.agent}/${f.capability} [${f.value}] ${f.problems.join('; ')} <${f.evidence_url}>`);
   for (const s of structural) console.log(`  STRUCTURE ${s}`);
   if (missing.length) console.log(`  MISSING ${missing.length} cells (agent x capability pairs without an entry)`);
 
   const byMethod: Record<string, number> = {};
   for (const r of reports) if (r.status === 'ok') byMethod[r.method] = (byMethod[r.method] ?? 0) + 1;
-  console.log(`Result: ${okCount} ok, ${failures.length} failed, ${skipped.length} skipped, ${structural.length} structural problems, ${missing.length} missing. Match methods: ${JSON.stringify(byMethod)}`);
+  console.log(`Result: ${okCount} ok, ${failures.length} failed, ${errors.length} fetch errors (cells untouched), ${skipped} skipped, ${structural.length} structural problems, ${missing.length} missing. Match methods: ${JSON.stringify(byMethod)}`);
 
   saveJson(path.join(DATA_DIR, 'check-report.json'), {
     run_at: new Date().toISOString(),
     ok: okCount,
     failed: failures.length,
-    skipped: skipped.length,
+    errors: errors.length,
+    skipped,
     structural,
     missing,
     cells: reports,
@@ -146,29 +182,25 @@ export async function runCheck(opts: { soft: boolean; fix: boolean; agent: strin
 
   if (opts.fix) {
     const today = todayIso();
-    const failKeys = new Set(failures.map((f) => cellKey(f.agent, f.capability)));
-    const okKeys = new Set(reports.filter((r) => r.status === 'ok').map((r) => cellKey(r.agent, r.capability)));
-    const cells: Cell[] = matrix.cells.map((cell) => {
-      const key = cellKey(cell.agent, cell.capability);
-      if (failKeys.has(key)) {
-        const marker = 'UNVERIFIED';
-        const notes = cell.notes.startsWith(marker) ? cell.notes : `${marker} (quote not found at source on ${today}; previous value ${cell.value}): ${cell.notes}`;
-        return { ...cell, value: 'unknown', verified: false, notes };
-      }
-      if (okKeys.has(key)) return { ...cell, verified: true, verified_at: today };
-      if (cell.value === 'unknown') return { ...cell, verified: false };
-      return cell;
-    });
-    for (const key of missing) {
-      const [agent, capability] = key.split('|') as [string, string];
-      cells.push({ agent, capability, value: 'unknown', quote: '', evidence_url: '', notes: '', confidence: 'low', verified: false, verified_at: '' });
-    }
-    saveJson(path.join(DATA_DIR, 'matrix.json'), {
-      version: 1,
-      generated_at: new Date().toISOString(),
-      cells: sortCells(cells, agents, caps.capabilities),
-    });
-    console.log(`Wrote data/matrix.json (${failures.length} cells set to unknown, ${missing.length} missing cells added)`);
+    const { cells, demoted } = applyFix(matrix.cells, reports, missing, today);
+    const sorted = sortCells(cells, agents, caps.capabilities);
+    const runAt = new Date().toISOString();
+    const changes: ChangesFile = {
+      run_at: runAt,
+      model: 'none (mechanical quote re-check)',
+      changes: diffMatrices(matrix.cells, sorted),
+      stats: {
+        agents_checked: new Set(targets.map((c) => c.agent)).size,
+        agents_failed: [],
+        cells_total: sorted.length,
+        cells_verified: sorted.filter((c) => c.verified).length,
+        cells_unknown: sorted.filter((c) => c.value === 'unknown').length,
+      },
+    };
+    saveJson(path.join(DATA_DIR, 'matrix.json'), { version: 1, generated_at: runAt, cells: sorted });
+    saveJson(path.join(DATA_DIR, 'changes.json'), changes);
+    writeFileSync(path.join(DATA_DIR, 'changes.md'), renderChangesMarkdown(changes, agents, caps.capabilities, errors.map((e) => `${e.agent}/${e.capability}: ${e.problems.join('; ')}`)), 'utf8');
+    console.log(`Wrote data/matrix.json (${demoted} cells demoted to unknown, ${missing.length} missing cells added), data/changes.json, data/changes.md`);
   }
 
   const bad = failures.length + structural.length + (opts.fix ? 0 : missing.length);

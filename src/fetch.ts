@@ -4,8 +4,10 @@
  * - GitHub "blob" URLs are rewritten to raw.githubusercontent.com so we get markdown, not the
  *   GitHub web app shell.
  * - HTML pages are reduced to their visible text so quotes can be matched against them.
+ * - Markdown and plain-text pages keep their text but lose inline HTML tags such as <kbd> and
+ *   <code>, which documentation sites mix into markdown and which would otherwise split a quote.
  * - Every URL is fetched at most once per run (in-memory cache) with a small concurrency limit
- *   and retries on transient errors.
+ *   and retries on transient errors. Downloads stop at maxBytes.
  */
 
 export interface FetchResult {
@@ -16,6 +18,7 @@ export interface FetchResult {
   ok: boolean;
   contentType: string;
   text: string;
+  truncated: boolean;
   error?: string;
 }
 
@@ -26,7 +29,7 @@ export interface FetchOptions {
   maxBytes?: number;
 }
 
-const DEFAULT_UA = 'agentmatrix-bot/0.1 (+https://github.com/agentmatrix; docs verification)';
+const DEFAULT_UA = 'agentmatrix-bot/0.1 (docs quote verification; https://github.com/OWNER/agentmatrix)';
 
 export function toFetchableUrl(url: string): string {
   let u: URL;
@@ -67,17 +70,16 @@ const ENTITIES: Record<string, string> = {
   larr: '←',
 };
 
+function codePointToString(cp: number, whole: string): string {
+  if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff)) return whole;
+  return String.fromCodePoint(cp);
+}
+
 export function decodeEntities(s: string): string {
   return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
     const b = body.toLowerCase();
-    if (b.startsWith('#x')) {
-      const cp = Number.parseInt(b.slice(2), 16);
-      return Number.isFinite(cp) ? String.fromCodePoint(cp) : whole;
-    }
-    if (b.startsWith('#')) {
-      const cp = Number.parseInt(b.slice(1), 10);
-      return Number.isFinite(cp) ? String.fromCodePoint(cp) : whole;
-    }
+    if (b.startsWith('#x')) return codePointToString(Number.parseInt(b.slice(2), 16), whole);
+    if (b.startsWith('#')) return codePointToString(Number.parseInt(b.slice(1), 10), whole);
     return ENTITIES[b] ?? whole;
   });
 }
@@ -98,10 +100,44 @@ export function htmlToText(html: string): string {
   return s.trim();
 }
 
+// Only tags that documentation authors commonly embed in markdown prose. Deliberately short:
+// command placeholders such as <source>, <ref> or <path> must survive, so generic words are out.
+const INLINE_HTML_TAGS = 'a|abbr|b|br|code|details|div|em|h[1-6]|i|img|kbd|li|ol|p|pre|small|span|strong|sub|summary|sup|table|tbody|td|th|thead|tr|ul';
+const INLINE_HTML_RE = new RegExp(`<\\/?(?:${INLINE_HTML_TAGS})\\b(?:\\s[^<>]*)?\\/?>`, 'gi');
+
+/** Removes common HTML tags that documentation authors embed in markdown (e.g. <kbd>Esc</kbd>). */
+export function stripInlineHtml(text: string): string {
+  return text.replace(INLINE_HTML_RE, ' ');
+}
+
 function looksLikeHtml(contentType: string, body: string): boolean {
   if (/text\/html|application\/xhtml/i.test(contentType)) return true;
   const head = body.slice(0, 500).toLowerCase();
   return head.includes('<!doctype html') || head.includes('<html');
+}
+
+async function readBody(res: Response, maxBytes: number): Promise<{ buf: Buffer; truncated: boolean }> {
+  if (!res.body) {
+    const all = Buffer.from(await res.arrayBuffer());
+    return { buf: all.subarray(0, maxBytes), truncated: all.length > maxBytes };
+  }
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  let truncated = false;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    chunks.push(value);
+    total += value.length;
+    if (total >= maxBytes) {
+      truncated = total > maxBytes;
+      await reader.cancel().catch(() => undefined);
+      break;
+    }
+  }
+  return { buf: Buffer.concat(chunks).subarray(0, maxBytes), truncated };
 }
 
 async function fetchOnce(url: string, opts: Required<FetchOptions>): Promise<FetchResult> {
@@ -118,9 +154,9 @@ async function fetchOnce(url: string, opts: Required<FetchOptions>): Promise<Fet
       },
     });
     const contentType = res.headers.get('content-type') ?? '';
-    const buf = Buffer.from(await res.arrayBuffer());
-    const body = buf.subarray(0, opts.maxBytes).toString('utf8');
-    const text = looksLikeHtml(contentType, body) ? htmlToText(body) : body.replace(/\r\n/g, '\n');
+    const { buf, truncated } = await readBody(res, opts.maxBytes);
+    const body = buf.toString('utf8');
+    const text = looksLikeHtml(contentType, body) ? htmlToText(body) : stripInlineHtml(body.replace(/\r\n/g, '\n'));
     return {
       url,
       fetchUrl,
@@ -129,11 +165,12 @@ async function fetchOnce(url: string, opts: Required<FetchOptions>): Promise<Fet
       ok: res.ok,
       contentType,
       text,
+      truncated,
       ...(res.ok ? {} : { error: `HTTP ${res.status}` }),
     };
   } catch (err) {
     const message = err instanceof Error ? (err.name === 'AbortError' ? `timeout after ${opts.timeoutMs}ms` : err.message) : String(err);
-    return { url, fetchUrl, finalUrl: fetchUrl, status: 0, ok: false, contentType: '', text: '', error: message };
+    return { url, fetchUrl, finalUrl: fetchUrl, status: 0, ok: false, contentType: '', text: '', truncated: false, error: message };
   } finally {
     clearTimeout(timer);
   }

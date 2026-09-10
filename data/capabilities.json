@@ -1,9 +1,9 @@
 {
   "values": {
-    "yes": "The capability is documented as supported and generally available.",
-    "partial": "Supported with a documented limitation: experimental or preview, requires a workaround, a narrower form of the capability, or only through an add-on such as an MCP server.",
-    "no": "Documentation explicitly says it is not supported, or the capability is absent from the documentation after a thorough read.",
-    "unknown": "Could not be determined from documentation, or the evidence quote could not be verified against the source."
+    "yes": "The capability is documented as supported and generally available, in the CLI or terminal surface of the product.",
+    "partial": "Documented, but with a limitation stated in the documentation: experimental, preview or beta (even if enabled by default); deprecated but still working; one platform only; a narrower form of the capability; only reachable through an add-on such as an MCP server or plugin; or only in the vendor's IDE surface rather than the CLI.",
+    "no": "Documentation explicitly says it is not supported, or the capability is absent from documentation that clearly covers the area (for example a complete command or configuration reference).",
+    "unknown": "Could not be determined from the documentation, or the evidence quote could not be verified against the source."
   },
   "groups": [
     { "id": "extend", "name": "Extensibility" },
@@ -26,217 +26,217 @@
       "group": "extend",
       "name": "Acts as MCP server",
       "question": "Can the agent itself be exposed as an MCP server to other clients?",
-      "rubric": "YES if there is a documented command or mode that serves the agent's tools over MCP (for example a serve subcommand). PARTIAL if only an unofficial or experimental path is documented. NO otherwise."
+      "rubric": "YES if there is a documented command or mode that serves the agent (its tools or a task tool) over MCP, for example a serve subcommand. PARTIAL if the path is deprecated or experimental, or only a bundled extension rather than the agent is exposed. NO otherwise. Exposing the agent over ACP, HTTP or a proprietary protocol does not count as MCP."
     },
     {
       "id": "hooks",
       "group": "extend",
       "name": "Lifecycle hooks",
       "question": "Can users run their own scripts at lifecycle events such as before or after a tool call, or at session start?",
-      "rubric": "YES if a hook system with multiple documented events is available to end users via configuration. PARTIAL if only a single event is exposed, or hooks are only available through a plugin or extension API rather than user configuration. NO otherwise."
+      "rubric": "YES if a hook system with multiple documented events is available to end users through configuration; a declarative hooks file (JSON, TOML, YAML) that maps events to commands counts as configuration. PARTIAL if only one or two fixed points are exposed (for example a post-edit test command), or hooks are only reachable through a plugin or extension API written in code. NO otherwise."
     },
     {
       "id": "custom_commands",
       "group": "extend",
       "name": "Custom slash commands",
-      "question": "Can users define reusable prompt templates or slash commands in files?",
-      "rubric": "YES if user-defined commands or prompt templates are documented (for example markdown files in a commands directory, or custom prompts in config). PARTIAL if only built-in commands can be customized in a limited way. NO otherwise."
+      "question": "Can users define reusable prompt templates or slash commands in files and invoke them explicitly?",
+      "rubric": "YES if user-defined commands or prompt templates are documented (markdown files in a commands directory, custom prompts in config) or if user-written SKILL.md skills can be invoked explicitly by name. PARTIAL if the only path is deprecated, replay of a command file, or a plugin or extension API, or if skills exist but can only be invoked by the model. NO otherwise."
     },
     {
       "id": "skills",
       "group": "extend",
       "name": "Agent Skills",
       "question": "Does the agent load Agent Skills (SKILL.md folders per the open Agent Skills format) or an equivalent modular skill package?",
-      "rubric": "YES if the docs describe loading SKILL.md-based skills or an equivalent named skills format from a directory. PARTIAL if skills are only available through an extension or plugin system with a different format. NO otherwise."
+      "rubric": "YES if the docs describe loading SKILL.md-based skills or an equivalent named skills format from a directory. PARTIAL if skills are only available through an extension or plugin system with a different format, or are marked experimental. NO otherwise."
     },
     {
       "id": "plugins",
       "group": "extend",
       "name": "Plugin system",
       "question": "Is there a plugin or extension system that bundles commands, agents, hooks, or MCP servers, beyond raw MCP configuration?",
-      "rubric": "YES if a plugin or extension format and an install mechanism (marketplace, registry, or install command) are documented. PARTIAL if extensions exist but only for a narrow purpose (for example themes or models only). NO otherwise."
+      "rubric": "YES if a plugin or extension format and an install mechanism (marketplace, registry, or install command) are documented. PARTIAL if extensions exist but only for a narrow purpose (for example themes or models only), or are marked experimental. NO otherwise."
     },
     {
       "id": "subagents",
       "group": "extend",
       "name": "Subagents",
       "question": "Can the agent delegate work to subagents that run in their own context?",
-      "rubric": "YES if built-in or user-defined subagents or delegation with separate context are documented. PARTIAL if delegation exists only through an experimental flag or requires an external orchestrator. NO otherwise."
+      "rubric": "YES if built-in or user-defined subagents or delegation with separate context are documented as generally available. PARTIAL if the documentation labels subagents experimental or preview (even when enabled by default), or delegation requires an experimental flag or an external orchestrator. NO otherwise."
     },
     {
       "id": "project_instructions",
       "group": "extend",
       "name": "Project instruction file",
       "question": "Does the agent read a project-level instruction file such as AGENTS.md, CLAUDE.md, GEMINI.md, or a rules file?",
-      "rubric": "YES if any project-level instruction file is documented as automatically loaded. PARTIAL if instructions must be passed manually each session. NO otherwise. Name the file or files in the notes."
+      "rubric": "YES if a project-level instruction file with a documented name or location is loaded automatically. PARTIAL if a file is loaded every session only after the user configures it (for example listing it in a project config), or must be passed manually. NO otherwise. Name the file or files in the notes."
     },
     {
       "id": "agents_md",
       "group": "extend",
       "name": "AGENTS.md support",
       "question": "Does the agent read AGENTS.md specifically (the cross-tool open convention)?",
-      "rubric": "YES if AGENTS.md is documented as automatically loaded. PARTIAL if it is only loaded via a configurable alias or a symlink instruction. NO if the docs do not mention AGENTS.md."
+      "rubric": "YES if AGENTS.md is documented as automatically loaded. PARTIAL if it is loaded only through a configurable file-name setting, or the docs give an import, alias or symlink workaround. NO if the docs do not mention AGENTS.md."
     },
     {
       "id": "permission_modes",
       "group": "control",
       "name": "Permission modes",
       "question": "Can users choose between approval levels for tool and command execution?",
-      "rubric": "YES if two or more named approval modes are documented (for example ask each time, auto-accept edits, full auto). PARTIAL if only a single on/off approval toggle exists. NO if every action is either always approved or always prompted with no configuration."
+      "rubric": "YES if two or more named approval modes are documented (for example ask each time, auto-accept edits, full auto), or a per-action permission configuration with prompt, allow and deny outcomes. PARTIAL if only a single on/off approval toggle exists. NO if actions are always approved or always prompted with no configuration."
     },
     {
       "id": "sandbox",
       "group": "control",
       "name": "Built-in sandbox",
       "question": "Does the agent sandbox shell commands at the OS level (filesystem or network isolation) without the user building their own container?",
-      "rubric": "YES if a built-in sandbox (seatbelt, bubblewrap, landlock, container, or network isolation) is documented as a feature. PARTIAL if the docs only recommend or provide an optional Docker image, or the sandbox covers one platform only. NO otherwise."
+      "rubric": "YES if a built-in sandbox (seatbelt, bubblewrap, landlock, seccomp, gVisor, or a managed container) is documented as a generally available feature on more than one platform. PARTIAL if the sandbox covers one platform only, is in preview, or if the agent offers containers as an isolation option the user must set up (for example a --container flag). NO otherwise; a Docker image offered purely as an install method does not count."
     },
     {
       "id": "checkpoints",
       "group": "control",
       "name": "Checkpoints and rewind",
       "question": "Can the user rewind file changes made by the agent to an earlier point without relying on their own git commits?",
-      "rubric": "YES if automatic checkpoints, snapshots, or a rewind or undo command over agent edits are documented. PARTIAL if rewind relies on git commits the agent makes, or covers only the last edit. NO otherwise."
+      "rubric": "YES if automatic checkpoints, snapshots, or a rewind or undo command over the agent's edits are documented. PARTIAL if rewind relies on git commits the agent itself makes, or covers only the last edit. NO otherwise, including when the docs only advise the user to commit before a task."
     },
     {
       "id": "plan_mode",
       "group": "control",
       "name": "Plan mode",
       "question": "Is there a read-only planning mode where the agent explores and proposes before making changes?",
-      "rubric": "YES if a named plan or read-only mode is documented. PARTIAL if planning is only a prompt convention or a separate command that does not restrict edits. NO otherwise."
+      "rubric": "YES if a named plan or read-only mode is documented that either blocks edits or produces a plan for approval before any change is made. PARTIAL if planning is only a prompt convention (for example the docs say to ask the model not to edit files), or a plan command whose effect on edits is not documented. NO otherwise."
     },
     {
       "id": "full_auto",
       "group": "control",
       "name": "Full-auto mode",
       "question": "Is there a documented mode that approves every action without prompting (for unattended runs)?",
-      "rubric": "YES if a flag or mode that skips all approvals is documented. PARTIAL if it exists only in headless mode or is restricted to sandboxed execution. NO otherwise."
+      "rubric": "YES if a flag, mode or default behaviour that skips all approvals is documented. PARTIAL if it exists only in headless mode or is restricted to sandboxed execution. NO otherwise."
     },
     {
       "id": "session_resume",
       "group": "session",
       "name": "Resume sessions",
       "question": "Can the user resume or continue a previous conversation?",
-      "rubric": "YES if resuming or continuing sessions is documented (flag, command, or picker). PARTIAL if only the most recent session can be continued and older ones cannot be selected. NO otherwise."
+      "rubric": "YES if resuming or continuing a chosen previous session is documented (flag, command, or picker), including threads shared with a web or IDE surface. PARTIAL if only the most recent history can be restored and older sessions cannot be selected. NO otherwise."
     },
     {
       "id": "headless",
       "group": "session",
       "name": "Headless and CI mode",
       "question": "Can the agent run non-interactively from scripts or CI, taking a prompt and exiting?",
-      "rubric": "YES if a non-interactive, print, or exec mode is documented. PARTIAL if non-interactive use requires piping through an unofficial workaround. NO otherwise."
+      "rubric": "YES if a non-interactive, print, run or exec mode is documented. PARTIAL if non-interactive use requires an unofficial workaround. NO otherwise."
     },
     {
       "id": "background_tasks",
       "group": "session",
       "name": "Background tasks",
-      "question": "Can long-running commands or tasks run in the background while the session continues?",
-      "rubric": "YES if background execution of commands or tasks is a documented feature. PARTIAL if only available for a specific task type or through an experimental flag. NO otherwise."
+      "question": "Can long-running shell commands or tasks run in the background while the session continues?",
+      "rubric": "YES if background execution of shell commands is a documented feature (for example a background shells view or a command to send a task to the background). PARTIAL if only subagents, threads or remote machines can run in the background while shell commands cannot, or the feature is behind an experimental flag or off by default on some platforms. NO otherwise."
     },
     {
       "id": "parallel_agents",
       "group": "session",
       "name": "Parallel agents",
       "question": "Is running multiple agent instances in parallel on one repository a documented, supported workflow?",
-      "rubric": "YES if the docs describe a supported parallel workflow (for example git worktree integration, cloud parallel runs, or a multi-agent runner). PARTIAL if the docs only say you may open several terminals. NO otherwise."
+      "rubric": "YES if the docs describe a generally available workflow for separate agent instances working in parallel: git worktree integration, cloud parallel runs, or managing several sessions side by side. PARTIAL if parallelism exists only as subagents inside one session, or the worktree, cloud or multi-session mechanism is experimental or preview. NO otherwise, including when the docs only say you may open several terminals."
     },
     {
       "id": "model_selection",
       "group": "model",
       "name": "Model selection",
       "question": "Can the user choose among two or more models?",
-      "rubric": "YES if switching between at least two models is documented. PARTIAL if only one model per plan or tier with no user control beyond that. NO if the model is fixed."
+      "rubric": "YES if switching between at least two models is documented, even within one vendor's model family. PARTIAL if the user can only choose a mode that routes between models, or one model per plan or tier. NO if the model is fixed."
     },
     {
       "id": "byok_providers",
       "group": "model",
       "name": "Custom providers and BYOK",
-      "question": "Can the user bring their own API key or point the agent at a third-party or OpenAI-compatible endpoint?",
-      "rubric": "YES if third-party providers or custom endpoints are documented. PARTIAL if only the vendor's own alternative clouds (for example Bedrock, Vertex, Azure) are supported, or BYOK is limited to the vendor's own API. NO if the agent only works with the vendor's hosted service."
+      "question": "Can the user bring their own API key for a third-party model provider, or point the agent at a custom or OpenAI-compatible endpoint?",
+      "rubric": "YES if third-party providers or custom endpoints are documented for the CLI, or an account-level BYOK setting that applies to the CLI. PARTIAL if BYOK is limited to the vendor's own models or clouds (for example Bedrock or Vertex for the vendor's model), is configured only in the IDE surface with a narrower CLI path, or requires routing through the vendor with no custom endpoint. NO if the agent only works with the vendor's hosted service."
     },
     {
       "id": "local_models",
       "group": "model",
       "name": "Local models",
-      "question": "Can the agent use locally hosted models (Ollama, LM Studio, llama.cpp, vLLM)?",
-      "rubric": "YES if local model use is documented. PARTIAL if possible only via a generic OpenAI-compatible endpoint setting with no local-model documentation. NO otherwise."
+      "question": "Can a locally hosted model (Ollama, LM Studio, llama.cpp, vLLM) generate the agent's responses?",
+      "rubric": "YES if local model use for the agent's responses is documented. PARTIAL if possible only via a generic OpenAI-compatible endpoint setting with no local-model documentation. NO otherwise; a local model used only for an auxiliary task such as routing, classification or autocomplete does not count."
     },
     {
       "id": "thinking_control",
       "group": "model",
       "name": "Reasoning control",
       "question": "Can the user toggle or adjust the model's reasoning or thinking effort?",
-      "rubric": "YES if a documented setting or command controls thinking or reasoning effort. PARTIAL if reasoning is on or off only via choosing a different model. NO otherwise."
+      "rubric": "YES if a documented flag, command, setting or environment variable controls thinking or reasoning effort. PARTIAL if reasoning is on or off only via choosing a different model. NO otherwise."
     },
     {
       "id": "cost_display",
       "group": "model",
       "name": "Token and cost display",
-      "question": "Does the agent show token usage or cost for the session?",
-      "rubric": "YES if a command, status line, or summary showing tokens or cost is documented. PARTIAL if only total tokens are shown with no cost, or only in a log file. NO otherwise."
+      "question": "Does the agent show what a session costs?",
+      "rubric": "YES if a command, status line or summary shows a cost figure, in currency or in the vendor's billing units such as credits or premium requests. PARTIAL if only token counts or quota are shown, or cost appears only in a cross-session report or log file. NO otherwise."
     },
     {
       "id": "image_input",
       "group": "io",
       "name": "Image input",
-      "question": "Can the user give the agent images (paste, drag-and-drop, or file path)?",
-      "rubric": "YES if image input is documented. PARTIAL if images are supported only via a file path with a specific model, or only in an IDE surface rather than the CLI. NO otherwise."
+      "question": "Can the user give the agent images (paste, drag-and-drop, file path or URL)?",
+      "rubric": "YES if image input in the CLI is documented by any method: paste, drag-and-drop, file path, URL or a built-in image-reading tool enabled by default. PARTIAL if images work only in the IDE surface, only through an optional extension, or only with an experimental flag. NO otherwise."
     },
     {
       "id": "web_search",
       "group": "io",
       "name": "Built-in web search",
       "question": "Does the agent have a built-in web search tool?",
-      "rubric": "YES if a web search tool ships with the agent. PARTIAL if web search is available only through an MCP server or an opt-in experimental flag. NO otherwise."
+      "rubric": "YES if a native web search tool ships with the agent. PARTIAL if web search is provided through an MCP server (even a bundled one), or an opt-in experimental flag. NO otherwise."
     },
     {
       "id": "web_fetch",
       "group": "io",
       "name": "Built-in URL fetch",
       "question": "Does the agent have a built-in tool to fetch and read a URL?",
-      "rubric": "YES if a URL fetch or read tool ships with the agent. PARTIAL if only through an MCP server or an experimental flag. NO otherwise."
+      "rubric": "YES if a native URL fetch or read tool ships with the agent. PARTIAL if pages are reachable only through an MCP server, an experimental flag, or as a side effect of a live web search tool. NO otherwise; reading a URL with a shell command does not count."
     },
     {
       "id": "ide_integration",
       "group": "io",
       "name": "Official IDE integration",
       "question": "Is there an official IDE extension or integration (VS Code, JetBrains, or similar) for this agent?",
-      "rubric": "YES if an official extension or integration is documented. PARTIAL if the integration is community-maintained or only a terminal launcher. NO otherwise."
+      "rubric": "YES if an official extension or integration is documented as generally available. PARTIAL if the official extension is marked experimental or preview, the integration is community-maintained, or it is only a terminal launcher. NO otherwise."
     },
     {
       "id": "git_pr_workflow",
       "group": "io",
       "name": "Git and PR workflow",
       "question": "Are commit creation and pull request creation documented, first-class workflows?",
-      "rubric": "YES if the docs describe creating commits and pull requests as a supported workflow (built-in command or documented gh or git flow). PARTIAL if only commits are covered, or PR creation requires the user to install and wire up tooling with no documented flow. NO otherwise."
+      "rubric": "YES if the docs describe creating commits and pull requests as a supported workflow (a built-in command, or a documented gh or git flow). PARTIAL if only commits are covered, PR creation is documented only through an MCP server or example prompt, or requires tooling the docs do not wire up. NO otherwise."
     },
     {
       "id": "auto_memory",
       "group": "io",
       "name": "Persistent memory",
       "question": "Does the agent itself write and maintain persistent memory across sessions?",
-      "rubric": "YES if automatic cross-session memory written by the agent is documented. PARTIAL if memory is a user-maintained file the agent only reads, or an experimental flag. NO otherwise."
+      "rubric": "YES if automatic cross-session memory written by the agent is documented as generally available. PARTIAL if it is in preview or experimental, off by default on paid plans only, provided through an MCP extension, or a documented methodology under which the agent writes memory files only after the user installs instructions. NO if memory is only a user-maintained file the agent reads, or absent."
     },
     {
       "id": "windows_native",
       "group": "platform",
       "name": "Native Windows",
       "question": "Does the agent run natively on Windows (PowerShell or cmd) without WSL?",
-      "rubric": "YES if native Windows support is documented. PARTIAL if Windows is supported only via WSL, or native support is marked experimental. NO if Windows is unsupported."
+      "rubric": "YES if native Windows support is documented, even when the vendor recommends WSL for the best experience. PARTIAL if Windows is supported only via WSL, or native support is marked experimental. NO if Windows is unsupported. Caveats about individual features on Windows belong in the notes."
     },
     {
       "id": "open_source",
       "group": "platform",
       "name": "Open source",
       "question": "Is the agent's source code available under an OSI-approved license?",
-      "rubric": "YES if the repository is published under an OSI-approved license (Apache-2.0, MIT, and so on). PARTIAL if source is available under a non-OSI or restrictive license. NO if the agent is closed source."
+      "rubric": "YES if the agent's repository is published under an OSI-approved license (Apache-2.0, MIT, and so on), even if a companion component is closed. PARTIAL if source is available under a non-OSI or restrictive license, or only part of the agent is open. NO if the agent is closed source; quote the license text or the closest official statement."
     },
     {
       "id": "free_tier",
       "group": "platform",
       "name": "Free tier",
       "question": "Can the agent be used without paying (a free plan, free quota, or free with a free provider)?",
-      "rubric": "YES if a free plan or free quota is documented. PARTIAL if only a time-limited trial is offered, or free use requires a third-party free model via BYOK. NO if paid access is required."
+      "rubric": "YES if a standing free plan or free quota that covers the agent is documented. PARTIAL if only a time-limited trial, promotional or rotating free models, or free use through a third-party free model via BYOK is documented. NO if paid access is required, including when a former free plan is closed to new sign-ups."
     }
   ]
 }

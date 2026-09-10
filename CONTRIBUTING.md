@@ -63,9 +63,13 @@ npm test
 
 Commit the regenerated `README.md` and `docs/` together with your data change; CI fails if they are out of sync.
 
-## Pull requests from the weekly run
+## The weekly run
 
-The `weekly` workflow opens a pull request titled *matrix: weekly re-verification*. Review each row in the description against its source. Merging is a human decision; if a change looks wrong, fix the rubric or the source list in the same PR so the next run agrees with you.
+The `weekly` workflow re-fetches every evidence URL and searches for every quote. When all quotes are still present it commits the refreshed verification dates directly. When a quote has disappeared it demotes the cell to *unknown*, keeps the old quote, URL and value in the notes, and opens both a pull request and an issue labelled `needs-recheck`. Fixing such a cell is a good first contribution: find the current wording in the docs (or confirm the feature is gone), update the cell, run `npm run check`, and open a pull request.
+
+If the repository has an `ANTHROPIC_API_KEY` secret, the same workflow re-derives every cell with Claude instead and opens a pull request titled *matrix: weekly re-verification*. Review each row in the description against its source. Merging is a human decision; if a change looks wrong, fix the rubric or the source list in the same PR so the next run agrees with you.
+
+Pull requests opened by the workflow do not trigger the CI workflow (GitHub does not run workflows for changes made with the default token), which is why the weekly workflow runs the typecheck, tests and build itself before opening one.
 
 ## Scope
 

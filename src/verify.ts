@@ -80,17 +80,27 @@ function parseArgs(argv: string[]): Options {
     dryRun: false,
     concurrency: 2,
   };
+  const efforts: Options['effort'][] = ['low', 'medium', 'high', 'xhigh', 'max'];
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--agent') opts.agent = argv[++i] ?? null;
-    else if (a === '--model') opts.model = argv[++i] ?? opts.model;
-    else if (a === '--effort') opts.effort = (argv[++i] as Options['effort']) ?? opts.effort;
-    else if (a === '--dry-run') opts.dryRun = true;
-    else if (a === '--concurrency') opts.concurrency = Math.max(1, Number.parseInt(argv[++i] ?? '2', 10) || 2);
-    else if (a === '--help' || a === '-h') {
+    else if (a === '--model') {
+      const m = (argv[++i] ?? '').trim();
+      if (!/^[a-z0-9.-]+$/i.test(m)) throw new Error(`--model expects a model id, got "${m}"`);
+      opts.model = m;
+    } else if (a === '--effort') {
+      const e = argv[++i] as Options['effort'];
+      if (!efforts.includes(e)) throw new Error(`--effort must be one of ${efforts.join(', ')}`);
+      opts.effort = e;
+    } else if (a === '--dry-run') opts.dryRun = true;
+    else if (a === '--concurrency') {
+      const n = Number.parseInt(argv[++i] ?? '', 10);
+      if (!Number.isInteger(n) || n < 1 || n > 10) throw new Error('--concurrency must be an integer between 1 and 10');
+      opts.concurrency = n;
+    } else if (a === '--help' || a === '-h') {
       console.log('usage: verify [--agent <id>] [--model <id>] [--effort low|medium|high|xhigh|max] [--concurrency N] [--dry-run]');
       process.exit(0);
-    }
+    } else throw new Error(`unknown argument ${a}`);
   }
   return opts;
 }
@@ -142,9 +152,10 @@ async function loadSources(agent: Agent, fetcher: Fetcher): Promise<{ sources: S
 }
 
 async function askClaude(client: Anthropic, opts: Options, system: string, user: string): Promise<{ output: z.infer<typeof ModelOutput>; usage: Anthropic.Beta.BetaUsage; model: string }> {
+  // max_tokens must cover the model's thinking as well as the JSON answer; thinking is always on for claude-fable-5-1.
   const stream = client.beta.messages.stream({
     model: opts.model,
-    max_tokens: 16_000,
+    max_tokens: 64_000,
     betas: ['server-side-fallback-2026-07-01'],
     fallbacks: 'default',
     system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],

@@ -35,9 +35,9 @@ test('renderChangesMarkdown produces a table with names and escapes pipes', () =
     ],
     [{ id: 'x', group: 'g', name: 'Cap X', question: 'q', rubric: 'r' }],
   );
-  assert.ok(md.includes('1 change'));
+  assert.ok(md.includes('1 value change'));
   assert.ok(md.includes('| Agent A | Cap X | no → **yes** |'));
-  assert.ok(md.includes('supports a \\| b'));
+  assert.ok(md.includes('<code>supports a &#124; b</code>'));
   assert.ok(md.includes('Agent B'));
 });
 

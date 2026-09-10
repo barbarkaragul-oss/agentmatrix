@@ -6,7 +6,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { DOCS_DIR, ROOT, cellKey, loadAgents, loadCapabilities, loadChanges, loadMatrix, type Agent, type Capability, type Cell, type Value } from './types.js';
+import { DOCS_DIR, ROOT, cellKey, isHttpUrl, loadAgents, loadCapabilities, loadChanges, loadMatrix, type Agent, type Capability, type Cell, type Value } from './types.js';
 
 const ICON: Record<Value, string> = { yes: '✅', partial: '🟡', no: '❌', unknown: '❔' };
 const LABEL: Record<Value, string> = { yes: 'yes', partial: 'partial', no: 'no', unknown: 'unknown' };
@@ -16,7 +16,12 @@ function mdTitle(s: string, max = 180): string {
   return t.length > max ? t.slice(0, max - 1) + '…' : t;
 }
 
-function replaceBetween(source: string, start: string, end: string, body: string): string {
+function mdUrl(url: string): string {
+  // Parentheses and spaces would end or break the markdown link destination.
+  return url.replace(/ /g, '%20').replace(/\(/g, '%28').replace(/\)/g, '%29');
+}
+
+export function replaceBetween(source: string, start: string, end: string, body: string): string {
   const i = source.indexOf(start);
   const j = source.indexOf(end);
   if (i < 0 || j < 0 || j < i) throw new Error(`README markers ${start} / ${end} not found or out of order`);
@@ -26,7 +31,7 @@ function replaceBetween(source: string, start: string, end: string, body: string
 export function renderMatrixMarkdown(agents: Agent[], caps: ReturnType<typeof loadCapabilities>, cells: Cell[]): string {
   const byKey = new Map(cells.map((c) => [cellKey(c.agent, c.capability), c]));
   const out: string[] = [];
-  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. Hover a cell for the quote, click it for the source.');
+  out.push('Legend: ✅ yes · 🟡 partial · ❌ no · ❔ unknown. On desktop, hover a cell for the quote; click it to open the source. On mobile, use the [interactive matrix](https://OWNER.github.io/agentmatrix/).');
   out.push('');
   for (const group of caps.groups) {
     const groupCaps = caps.capabilities.filter((c) => c.group === group.id);
@@ -38,9 +43,9 @@ export function renderMatrixMarkdown(agents: Agent[], caps: ReturnType<typeof lo
     for (const cap of groupCaps) {
       const row = agents.map((a) => {
         const cell = byKey.get(cellKey(a.id, cap.id));
-        if (!cell || cell.value === 'unknown' || !cell.evidence_url) return ICON.unknown;
+        if (!cell || cell.value === 'unknown' || !isHttpUrl(cell.evidence_url)) return ICON.unknown;
         const title = mdTitle(cell.quote || cell.notes || LABEL[cell.value]);
-        return `[${ICON[cell.value]}](${cell.evidence_url} "${title}")`;
+        return `[${ICON[cell.value]}](${mdUrl(cell.evidence_url)} "${title}")`;
       });
       out.push(`| **${cap.name}** | ${row.join(' | ')} |`);
     }
@@ -60,15 +65,23 @@ function renderStats(agents: Agent[], caps: Capability[], cells: Cell[]): string
 
 function renderRecentChanges(agents: Agent[], caps: Capability[]): string {
   const changes = loadChanges();
-  if (!changes || changes.changes.length === 0) return `_No value changes in the last verification run${changes ? ` (${changes.run_at.slice(0, 10)})` : ''}._`;
+  if (!changes) return '_The weekly re-verification has not run yet. Results appear here after the first run._';
+  if (changes.changes.length === 0) return `_Last run ${changes.run_at.slice(0, 10)}: every quote was still present at its source, no value changed._`;
   const agentName = new Map(agents.map((a) => [a.id, a.name]));
   const capName = new Map(caps.map((c) => [c.id, c.name]));
   const lines = changes.changes.slice(0, 15).map((ch) => {
-    const src = ch.evidence_url ? ` ([source](${ch.evidence_url}))` : '';
+    const src = isHttpUrl(ch.evidence_url) ? ` ([source](${mdUrl(ch.evidence_url)}))` : '';
     return `- **${agentName.get(ch.agent) ?? ch.agent}** · ${capName.get(ch.capability) ?? ch.capability}: ${LABEL[ch.from]} → **${LABEL[ch.to]}**${src}`;
   });
   const more = changes.changes.length > 15 ? `\n- …and ${changes.changes.length - 15} more in [changes.json](data/changes.json)` : '';
   return `Last run ${changes.run_at.slice(0, 10)}:\n\n${lines.join('\n')}${more}`;
+}
+
+/** Embeds the JSON payload and repository URL into the site template. Uses function replacers so `$` sequences in data are literal. */
+export function embedData(template: string, payload: unknown, repoUrl: string): string {
+  const json = JSON.stringify(payload).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
+  const safeRepo = isHttpUrl(repoUrl) ? repoUrl.replace(/["<>]/g, '') : '';
+  return template.replace('/*__AGENTMATRIX_DATA__*/', () => `window.AGENTMATRIX = ${json};`).replace('__REPO_URL__', () => safeRepo);
 }
 
 export function generateAll(): void {
@@ -86,6 +99,8 @@ export function generateAll(): void {
 
   mkdirSync(DOCS_DIR, { recursive: true });
   const template = readFileSync(path.join(ROOT, 'src', 'site.template.html'), 'utf8');
+  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as { repository?: { url?: string } };
+  const repoUrl = (pkg.repository?.url ?? '').replace(/\.git$/, '');
   const payload = {
     generated_at: matrix.generated_at,
     agents,
@@ -95,13 +110,7 @@ export function generateAll(): void {
     cells: matrix.cells,
     changes: changes ?? null,
   };
-  const json = JSON.stringify(payload).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
-  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as { repository?: { url?: string } };
-  const repoUrl = (pkg.repository?.url ?? '').replace(/\.git$/, '');
-  const html = template
-    .replace('/*__AGENTMATRIX_DATA__*/', `window.AGENTMATRIX = ${json};`)
-    .replace('__REPO_URL__', repoUrl.replace(/"/g, ''));
-  writeFileSync(path.join(DOCS_DIR, 'index.html'), html, 'utf8');
+  writeFileSync(path.join(DOCS_DIR, 'index.html'), embedData(template, payload, repoUrl), 'utf8');
   writeFileSync(path.join(DOCS_DIR, 'matrix.json'), JSON.stringify({ ...matrix, agents, capabilities: caps.capabilities }, null, 2) + '\n', 'utf8');
   writeFileSync(path.join(DOCS_DIR, 'changes.json'), JSON.stringify(changes ?? { run_at: '', model: '', changes: [], stats: null }, null, 2) + '\n', 'utf8');
   writeFileSync(path.join(DOCS_DIR, '.nojekyll'), '', 'utf8');
@@ -114,6 +123,6 @@ if (isMain) {
     generateAll();
   } catch (err) {
     console.error(err);
-    process.exit(1);
+    process.exitCode = 1;
   }
 }

@@ -9,6 +9,11 @@ export const DATA_DIR = path.join(ROOT, 'data');
 export const DOCS_DIR = path.join(ROOT, 'docs');
 
 const httpUrl = z.string().refine((s) => /^https?:\/\/\S+$/.test(s), 'must be an http(s) URL');
+const httpUrlOrEmpty = z.string().refine((s) => s === '' || /^https?:\/\/\S+$/.test(s), 'must be empty or an http(s) URL');
+
+export function isHttpUrl(s: string): boolean {
+  return /^https?:\/\/\S+$/.test(s);
+}
 
 export const ValueSchema = z.enum(['yes', 'partial', 'no', 'unknown']);
 export type Value = z.infer<typeof ValueSchema>;
@@ -49,7 +54,7 @@ export const CellSchema = z.object({
   capability: z.string(),
   value: ValueSchema,
   quote: z.string(),
-  evidence_url: z.string(),
+  evidence_url: httpUrlOrEmpty,
   notes: z.string(),
   confidence: ConfidenceSchema,
   verified: z.boolean(),
@@ -70,7 +75,7 @@ export const ChangeSchema = z.object({
   from: ValueSchema,
   to: ValueSchema,
   quote: z.string(),
-  evidence_url: z.string(),
+  evidence_url: httpUrlOrEmpty,
   notes: z.string(),
 });
 export type Change = z.infer<typeof ChangeSchema>;

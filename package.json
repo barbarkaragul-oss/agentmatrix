@@ -22,12 +22,12 @@
     "ci": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "latest",
-    "zod": "latest"
+    "@anthropic-ai/sdk": "^0.124.0",
+    "zod": "^4.6.1"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "tsx": "latest",
-    "typescript": "latest"
+    "@types/node": "^22.20.2",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2"
   }
 }

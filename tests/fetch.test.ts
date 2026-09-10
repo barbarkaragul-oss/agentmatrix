@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { decodeEntities, htmlToText, toFetchableUrl } from '../src/fetch.js';
+import { decodeEntities, htmlToText, stripInlineHtml, toFetchableUrl } from '../src/fetch.js';
 
 test('toFetchableUrl rewrites GitHub blob URLs to raw and strips fragments', () => {
   assert.equal(
@@ -12,8 +12,9 @@ test('toFetchableUrl rewrites GitHub blob URLs to raw and strips fragments', () 
   assert.equal(toFetchableUrl('not a url'), 'not a url');
 });
 
-test('decodeEntities handles named, decimal and hex entities', () => {
+test('decodeEntities handles named, decimal and hex entities and leaves invalid code points alone', () => {
   assert.equal(decodeEntities('a &amp; b &lt;c&gt; &#39;d&#x27; &nbsp;e &unknown;'), "a & b <c> 'd'  e &unknown;");
+  assert.equal(decodeEntities('&#99999999; &#x110000; &#xD800; &#65;'), '&#99999999; &#x110000; &#xD800; A');
 });
 
 test('htmlToText strips scripts, styles and tags, keeps visible text with line breaks', () => {
@@ -27,5 +28,9 @@ test('htmlToText strips scripts, styles and tags, keeps visible text with line b
   assert.ok(!text.includes('hidden'));
   assert.ok(!text.includes('comment'));
   assert.ok(!text.includes('<'));
-  assert.ok(text.includes('a \t b') || text.includes('a b'));
+});
+
+test('stripInlineHtml removes documentation tags inside markdown but leaves code generics alone', () => {
+  assert.equal(stripInlineHtml('press <kbd>Esc</kbd> twice, see <a href="x">docs</a><br/>'), 'press  Esc  twice, see  docs  ');
+  assert.equal(stripInlineHtml('use Array<string> and Map<K, V>'), 'use Array<string> and Map<K, V>');
 });

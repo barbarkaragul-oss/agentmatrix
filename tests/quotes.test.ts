@@ -45,9 +45,16 @@ test('findQuote: very short quotes are rejected', () => {
   assert.equal(findQuote(page, 'yes').found, false);
 });
 
-test('quoteProblems flags length and internal ellipsis', () => {
+test('quoteProblems flags length and replacement characters', () => {
   assert.deepEqual(quoteProblems('too short'), ['quote shorter than 12 characters']);
-  assert.ok(quoteProblems('Supports hooks ... and also skills for everyone').some((p) => p.includes('ellipsis')));
   assert.deepEqual(quoteProblems('A perfectly reasonable quote from the documentation.'), []);
   assert.ok(quoteProblems('x'.repeat(401)).some((p) => p.includes('longer')));
+  assert.ok(quoteProblems('Run amp threads continue T-� to attach').some((p) => p.includes('U+FFFD')));
+});
+
+test('findQuote: a stitched quote with an ellipsis cannot pass through the compact pass', () => {
+  const page = prepareText('Hooks run before tools. Skills load from SKILL.md files.');
+  assert.equal(findQuote(page, 'Hooks run before tools ... Skills load from SKILL.md files').found, false);
+  const code = prepareText('For background tasks, `delegate(..., async: true)` returns a task id.');
+  assert.equal(findQuote(code, 'For background tasks, `delegate(..., async: true)` returns a task id.').found, true);
 });

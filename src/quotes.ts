@@ -63,9 +63,13 @@ export function findQuote(haystack: PreparedText | string, quote: string): Quote
     return { found: true, method: 'normalized' };
   }
 
-  const cq = compactText(q);
-  if (cq.length >= MIN_QUOTE_LENGTH && prepared.compact.includes(cq)) {
-    return { found: true, method: 'compact' };
+  // The compact pass drops all punctuation, so it must not be used for quotes that contain an
+  // ellipsis: "A ... B" would otherwise match a page where A and B are adjacent sentences.
+  if (!/\.\.\.|…/.test(q)) {
+    const cq = compactText(q);
+    if (cq.length >= MIN_QUOTE_LENGTH && prepared.compact.includes(cq)) {
+      return { found: true, method: 'compact' };
+    }
   }
 
   return { found: false, method: 'none' };
@@ -77,6 +81,6 @@ export function quoteProblems(quote: string): string[] {
   const q = quote.trim();
   if (q.length < MIN_QUOTE_LENGTH) problems.push(`quote shorter than ${MIN_QUOTE_LENGTH} characters`);
   if (q.length > MAX_QUOTE_LENGTH) problems.push(`quote longer than ${MAX_QUOTE_LENGTH} characters`);
-  if (/\.\.\.\s*\S.*\S\s*\.\.\./.test(q) || /\s\.\.\.\s/.test(q)) problems.push('quote contains an internal ellipsis (must be one contiguous excerpt)');
+  if (q.includes('�')) problems.push('quote contains a replacement character (U+FFFD); copy it from the page again');
   return problems;
 }

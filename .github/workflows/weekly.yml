@@ -1,10 +1,19 @@
 name: Weekly verification
 
+# Free mode (default): re-fetch every source page and re-check every quote. Quotes that vanished
+# demote their cell to "unknown"; a pull request and an issue are opened for a human.
+# Claude mode: only when the ANTHROPIC_API_KEY secret is set (or mode=claude is chosen), every
+# cell is re-derived from the documentation with the Claude API, then verified the same way.
 on:
   schedule:
     - cron: '0 6 * * 1'   # Mondays 06:00 UTC
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'auto = Claude if ANTHROPIC_API_KEY is set, otherwise free; free = re-check quotes only; claude = re-derive with Claude'
+        type: choice
+        options: [auto, free, claude]
+        default: auto
       agent:
         description: 'Only re-verify one agent id (blank = all)'
         required: false
@@ -13,6 +22,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 concurrency:
   group: weekly-verification
@@ -22,6 +32,10 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      MODE_INPUT: ${{ github.event.inputs.mode || 'auto' }}
+      AGENT_INPUT: ${{ github.event.inputs.agent || '' }}
+      HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,25 +43,71 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Re-verify the matrix with Claude
+
+      - name: Decide mode
+        id: mode
+        run: |
+          if [ "$MODE_INPUT" = "claude" ] || { [ "$MODE_INPUT" = "auto" ] && [ "$HAS_KEY" = "true" ]; }; then
+            echo "mode=claude" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=free" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Mode: $(tail -c 8 "$GITHUB_OUTPUT")"
+
+      - name: Re-derive cells with Claude
+        if: steps.mode.outputs.mode == 'claude'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AGENTMATRIX_MODEL: ${{ vars.AGENTMATRIX_MODEL }}
         run: |
-          if [ -n "${{ github.event.inputs.agent }}" ]; then
-            npm run verify -- --agent "${{ github.event.inputs.agent }}"
+          if [ -n "$AGENT_INPUT" ]; then
+            npm run verify -- --agent "$AGENT_INPUT"
           else
             npm run verify
           fi
+
+      - name: Re-check every quote against its source (free mode)
+        if: steps.mode.outputs.mode == 'free'
+        run: |
+          if [ -n "$AGENT_INPUT" ]; then
+            npm run check -- --fix --soft --agent "$AGENT_INPUT"
+          else
+            npm run check -- --fix --soft
+          fi
+
       - name: Regenerate README tables and site
         run: npm run build
-      - name: Open pull request
+
+      - name: Typecheck and test the result
+        run: npm run typecheck && npm test
+
+      - name: Count value changes
+        id: changes
+        run: echo "count=$(node -e "console.log(require('./data/changes.json').changes.length)")" >> "$GITHUB_OUTPUT"
+
+      - name: Commit refreshed verification dates (no value changes)
+        if: steps.changes.outputs.count == '0'
+        env:
+          MODE: ${{ steps.mode.outputs.mode }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/matrix.json data/changes.json data/changes.md README.md docs/
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "matrix: weekly re-verification ($MODE mode), all quotes still present"
+            git push
+          fi
+
+      - name: Open pull request with value changes
+        if: steps.changes.outputs.count != '0'
         uses: peter-evans/create-pull-request@v7
         with:
           branch: bot/weekly-verification
           delete-branch: true
-          commit-message: 'matrix: weekly re-verification'
-          title: 'matrix: weekly re-verification'
+          commit-message: 'matrix: weekly re-verification (${{ steps.mode.outputs.mode }} mode)'
+          title: 'matrix: weekly re-verification (${{ steps.changes.outputs.count }} value changes)'
           body-path: data/changes.md
           labels: weekly-verification
           add-paths: |
@@ -56,3 +116,11 @@ jobs:
             data/changes.md
             README.md
             docs/
+
+      - name: Open an issue for cells that need a human (free mode)
+        if: steps.changes.outputs.count != '0' && steps.mode.outputs.mode == 'free'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: 'Docs changed: ${{ steps.changes.outputs.count }} cell(s) need a fresh quote'
+          content-filepath: data/changes.md
+          labels: needs-recheck, good first issue

@@ -21,23 +21,43 @@ export function diffMatrices(previous: Cell[], next: Cell[]): Change[] {
   return changes;
 }
 
-const VALUE_LABEL: Record<string, string> = { yes: 'yes', partial: 'partial', no: 'no', unknown: 'unknown' };
-
-function escapeMd(s: string): string {
-  return s.replace(/\|/g, '\\|').replace(/\r?\n/g, ' ').trim();
+/** Escapes text for a markdown table cell inside a PR or issue body: no pipes, no line breaks, no HTML, no @-mentions or #refs rendered as links. */
+export function escapeMd(s: string): string {
+  // Order matters: '&' and '#' are escaped first because the entities inserted afterwards contain them.
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/#/g, '&#35;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\|/g, '&#124;')
+    .replace(/@/g, '&#64;')
+    .replace(/`/g, '&#96;')
+    .replace(/\r?\n/g, ' ')
+    .trim();
 }
 
-export function renderChangesMarkdown(file: ChangesFile, agents: Agent[], capabilities: Capability[]): string {
+function shorten(s: string, max: number): string {
+  const t = s.replace(/\s+/g, ' ').trim();
+  return t.length > max ? t.slice(0, max - 1) + '…' : t;
+}
+
+export function renderChangesMarkdown(file: ChangesFile, agents: Agent[], capabilities: Capability[], fetchErrors: string[] = []): string {
   const agentName = new Map(agents.map((a) => [a.id, a.name]));
   const capName = new Map(capabilities.map((c) => [c.id, c.name]));
   const lines: string[] = [];
   const n = file.changes.length;
-  lines.push(`## Weekly re-verification: ${n} change${n === 1 ? '' : 's'}`);
+  lines.push(`## Weekly re-verification: ${n} value change${n === 1 ? '' : 's'}`);
   lines.push('');
-  lines.push(`Run: ${file.run_at} · Model: \`${file.model}\` · Agents checked: ${file.stats.agents_checked} · Cells verified: ${file.stats.cells_verified}/${file.stats.cells_total} · Unknown: ${file.stats.cells_unknown}`);
+  lines.push(`Run: ${file.run_at} · Method: ${escapeMd(file.model)} · Agents checked: ${file.stats.agents_checked} · Cells verified: ${file.stats.cells_verified}/${file.stats.cells_total} · Unknown: ${file.stats.cells_unknown}`);
   if (file.stats.agents_failed.length > 0) {
     lines.push('');
-    lines.push(`Agents that could not be checked this run (previous values kept): ${file.stats.agents_failed.map((a) => agentName.get(a) ?? a).join(', ')}`);
+    lines.push(`Agents that could not be checked this run (previous values kept): ${file.stats.agents_failed.map((a) => escapeMd(agentName.get(a) ?? a)).join(', ')}`);
+  }
+  if (fetchErrors.length > 0) {
+    lines.push('');
+    lines.push(`Pages that could not be fetched this run (cells left untouched, ${fetchErrors.length}):`);
+    for (const e of fetchErrors.slice(0, 30)) lines.push(`- ${escapeMd(e)}`);
+    if (fetchErrors.length > 30) lines.push(`- …and ${fetchErrors.length - 30} more`);
   }
   lines.push('');
   if (n === 0) {
@@ -47,11 +67,15 @@ export function renderChangesMarkdown(file: ChangesFile, agents: Agent[], capabi
   lines.push('| Agent | Capability | Change | Evidence |');
   lines.push('|---|---|---|---|');
   for (const ch of file.changes) {
-    const change = `${VALUE_LABEL[ch.from]} → **${VALUE_LABEL[ch.to]}**`;
-    const evidence = ch.evidence_url ? `[source](${ch.evidence_url})${ch.quote ? ` — “${escapeMd(ch.quote.slice(0, 160))}${ch.quote.length > 160 ? '…' : ''}”` : ''}` : '—';
-    lines.push(`| ${agentName.get(ch.agent) ?? ch.agent} | ${capName.get(ch.capability) ?? ch.capability} | ${change} | ${evidence} |`);
+    const change = `${ch.from} → **${ch.to}**`;
+    const evidence = ch.evidence_url
+      ? `[source](${ch.evidence_url})${ch.quote ? ` — <code>${escapeMd(shorten(ch.quote, 160))}</code>` : ''}`
+      : ch.notes
+        ? `<code>${escapeMd(shorten(ch.notes, 220))}</code>`
+        : '—';
+    lines.push(`| ${escapeMd(agentName.get(ch.agent) ?? ch.agent)} | ${escapeMd(capName.get(ch.capability) ?? ch.capability)} | ${change} | ${evidence} |`);
   }
   lines.push('');
-  lines.push('Review each row against its source before merging. A wrong cell is worse than a stale one.');
+  lines.push('Review each row against its source before merging. A wrong cell is worse than a stale one. Cells demoted to unknown keep their previous quote and URL in the notes; restore them with a current quote, or leave them unknown.');
   return lines.join('\n') + '\n';
 }
