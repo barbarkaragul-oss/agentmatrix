@@ -6,7 +6,8 @@
   <a href="https://barbarkaragul-oss.github.io/agentmatrix/">Interactive matrix</a> ·
   <a href="docs/matrix.json">Raw JSON</a> ·
   <a href="#contributing">Add an agent</a> ·
-  <a href="#how-it-works">How it works</a>
+  <a href="#how-it-works">How it works</a> ·
+  <a href="https://barbaros.dev/agentmatrix/">Write-up</a>
 </p>
 
 <p align="center">
