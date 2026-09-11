@@ -1,5 +1,5 @@
 ## Weekly re-verification: 0 value changes
 
-Run: 2026-09-10T19:47:24.674Z · Method: none (mechanical quote re-check) · Agents checked: 10 · Cells verified: 320/320 · Unknown: 0
+Run: 2026-09-11T20:05:25.525Z · Method: none (mechanical quote re-check, agent qwen-code only) · Agents checked: 1 · Cells verified: 0/32 · Unknown: 32
 
 No capability values changed. Verification dates were refreshed.

@@ -189,6 +189,25 @@
         "https://ampcode.com/docs/pricing",
         "https://ampcode.com/news"
       ]
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "vendor": "Alibaba Cloud / Qwen",
+      "homepage": "https://github.com/QwenLM/qwen-code",
+      "repo": "https://github.com/QwenLM/qwen-code",
+      "sources": [
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/configuration.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/commands.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/authentication.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/tools-api.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/deployment.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/extension.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/checkpointing.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/privacy.md",
+        "https://github.com/QwenLM/qwen-code/releases"
+      ]
     }
   ]
 }
