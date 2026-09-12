@@ -208,6 +208,20 @@
         "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/privacy.md",
         "https://github.com/QwenLM/qwen-code/releases"
       ]
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "vendor": "Charm",
+      "homepage": "https://github.com/charmbracelet/crush",
+      "repo": "https://github.com/charmbracelet/crush",
+      "sources": [
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/docs/config/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/docs/hooks/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/AGENTS.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/crush.json"
+      ]
     }
   ]
 }

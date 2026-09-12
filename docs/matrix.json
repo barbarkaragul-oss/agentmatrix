@@ -3873,6 +3873,358 @@
       "confidence": "low",
       "verified": false,
       "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "mcp_client",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "mcp_server",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "hooks",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "custom_commands",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "skills",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "plugins",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "subagents",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "project_instructions",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "agents_md",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "permission_modes",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "sandbox",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "checkpoints",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "plan_mode",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "full_auto",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "session_resume",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "headless",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "background_tasks",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "parallel_agents",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "model_selection",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "byok_providers",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "local_models",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "thinking_control",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "cost_display",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "image_input",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "web_search",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "web_fetch",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "ide_integration",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "git_pr_workflow",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "auto_memory",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "windows_native",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "open_source",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "crush",
+      "capability": "free_tier",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "Added as a source-only first pass; cells can be filled by the weekly verifier or a follow-up evidence PR.",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
     }
   ],
   "agents": [
@@ -4083,6 +4435,20 @@
         "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/checkpointing.md",
         "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/privacy.md",
         "https://github.com/QwenLM/qwen-code/releases"
+      ]
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "vendor": "Charm",
+      "homepage": "https://github.com/charmbracelet/crush",
+      "repo": "https://github.com/charmbracelet/crush",
+      "sources": [
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/docs/config/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/docs/hooks/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/AGENTS.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/crush.json"
       ]
     }
   ],
