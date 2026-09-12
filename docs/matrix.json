@@ -368,13 +368,13 @@
     {
       "agent": "codex-cli",
       "capability": "mcp_server",
-      "value": "partial",
-      "quote": "Deprecated interface for running Codex as an MCP server over stdio. Use the Codex app server instead.",
+      "value": "no",
+      "quote": "The codex mcp-server command and standalone codex-mcp-server binary have been removed. Use the Codex app server instead.",
       "evidence_url": "https://learn.chatgpt.com/docs/developer-commands?surface=cli",
-      "notes": "`codex mcp-server` exists and serves Codex over MCP on stdio but is marked Deprecated in the command reference; the recommended replacement is `codex app-server` (marked Experimental), which is not MCP.",
+      "notes": "The command reference now says `codex mcp-server` and the standalone binary have been removed; the replacement `codex app-server` (Experimental) speaks its own protocol over stdio, WebSocket or a Unix socket, not MCP. Was partial (deprecated but present) until the page changed after 2026-09-10.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-12"
     },
     {
       "agent": "codex-cli",
@@ -3383,12 +3383,12 @@
       "agent": "amp",
       "capability": "byok_providers",
       "value": "yes",
-      "quote": "Bring your own model provider keys",
+      "quote": "Bring your own keys (BYOK)",
       "evidence_url": "https://ampcode.com/docs/pricing",
-      "notes": "Own provider API keys (e.g. an Anthropic key for Claude Fable) are added under Model Routing / Workspace Model Routing; ChatGPT subscriptions can also be linked. No generic OpenAI-compatible custom endpoint setting is documented.",
+      "notes": "Listed as a feature on every plan on the pricing page (wording changed from \"Bring your own model provider keys\" after 2026-09-10); own provider keys are configured under Model Routing. No generic OpenAI-compatible custom endpoint setting is documented.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-12"
     },
     {
       "agent": "amp",
