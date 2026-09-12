@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-10T19:47:24.674Z",
+  "generated_at": "2026-09-11T20:05:25.525Z",
   "cells": [
     {
       "agent": "claude-code",
@@ -3521,6 +3521,358 @@
       "confidence": "medium",
       "verified": true,
       "verified_at": "2026-09-10"
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "mcp_client",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "mcp_server",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "hooks",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "custom_commands",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "skills",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "plugins",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "subagents",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "project_instructions",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "agents_md",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "permission_modes",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "sandbox",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "checkpoints",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "plan_mode",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "full_auto",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "session_resume",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "headless",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "background_tasks",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "parallel_agents",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "model_selection",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "byok_providers",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "local_models",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "thinking_control",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "cost_display",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "image_input",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "web_search",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "web_fetch",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "ide_integration",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "git_pr_workflow",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "auto_memory",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "windows_native",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "open_source",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
+    },
+    {
+      "agent": "qwen-code",
+      "capability": "free_tier",
+      "value": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "",
+      "confidence": "low",
+      "verified": false,
+      "verified_at": ""
     }
   ],
   "agents": [
@@ -3712,6 +4064,25 @@
         "https://ampcode.com/docs/customize/agents-md",
         "https://ampcode.com/docs/pricing",
         "https://ampcode.com/news"
+      ]
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "vendor": "Alibaba Cloud / Qwen",
+      "homepage": "https://github.com/QwenLM/qwen-code",
+      "repo": "https://github.com/QwenLM/qwen-code",
+      "sources": [
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/configuration.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/commands.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/authentication.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/tools-api.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/cli/deployment.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/extension.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/checkpointing.md",
+        "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/privacy.md",
+        "https://github.com/QwenLM/qwen-code/releases"
       ]
     }
   ],

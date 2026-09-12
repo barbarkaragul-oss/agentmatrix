@@ -1,12 +1,12 @@
 {
-  "run_at": "2026-09-10T19:47:24.674Z",
-  "model": "none (mechanical quote re-check)",
+  "run_at": "2026-09-11T20:05:25.525Z",
+  "model": "none (mechanical quote re-check, agent qwen-code only)",
   "changes": [],
   "stats": {
-    "agents_checked": 10,
+    "agents_checked": 1,
     "agents_failed": [],
-    "cells_total": 320,
-    "cells_verified": 320,
-    "cells_unknown": 0
+    "cells_total": 32,
+    "cells_verified": 0,
+    "cells_unknown": 32
   }
 }
