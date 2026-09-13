@@ -1,12 +1,22 @@
 {
-  "run_at": "2026-09-13T16:32:19.504Z",
-  "model": "none (mechanical quote re-check, agent plandex only)",
-  "changes": [],
+  "run_at": "2026-09-13T16:48:24.639Z",
+  "model": "none (mechanical quote re-check, agent junie-cli only)",
+  "changes": [
+    {
+      "agent": "junie-cli",
+      "capability": "free_tier",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-09-13 (quote not found on page; was partial): \"5 AI credits included, enough for a real task\" at https://junie.jetbrains.com/ | The Free plan starts with 5 AI credits and no card; beyond that the CLI can still be used without a JetBrains subscription via Bring Your Own Key or a locally running model, while JetBrains-hosted usage is paid."
+    }
+  ],
   "stats": {
     "agents_checked": 1,
     "agents_failed": [],
     "cells_total": 32,
-    "cells_verified": 32,
-    "cells_unknown": 0
+    "cells_verified": 31,
+    "cells_unknown": 1
   }
 }
