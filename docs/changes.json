@@ -1,12 +1,12 @@
 {
-  "run_at": "2026-09-13T15:11:37.948Z",
-  "model": "none (mechanical quote re-check, agent amp only)",
+  "run_at": "2026-09-13T15:40:49.063Z",
+  "model": "none (mechanical quote re-check, agent continue-cli only)",
   "changes": [],
   "stats": {
     "agents_checked": 1,
     "agents_failed": [],
     "cells_total": 32,
-    "cells_verified": 32,
-    "cells_unknown": 0
+    "cells_verified": 23,
+    "cells_unknown": 9
   }
 }

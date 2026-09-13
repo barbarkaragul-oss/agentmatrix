@@ -208,6 +208,72 @@
         "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/privacy.md",
         "https://github.com/QwenLM/qwen-code/releases"
       ]
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "vendor": "Charm",
+      "homepage": "https://github.com/charmbracelet/crush",
+      "repo": "https://github.com/charmbracelet/crush",
+      "sources": [
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/README.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/cmd/run.go",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/cmd/stats.go",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/agent/tools/web_search.md.tpl",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/agent/tools/web_fetch.md.tpl",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/agent/tools/bash.md.tpl",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/agent/templates/agent_tool.md",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/agent/agent_tool.go",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/ui/dialog/filepicker.go",
+        "https://raw.githubusercontent.com/charmbracelet/crush/main/internal/message/attachment.go"
+      ]
+    },
+    {
+      "id": "openhands-cli",
+      "name": "OpenHands CLI",
+      "vendor": "All Hands AI",
+      "homepage": "https://docs.openhands.dev/",
+      "repo": "https://github.com/OpenHands/OpenHands-CLI",
+      "sources": [
+        "https://docs.openhands.dev/openhands/usage/cli/command-reference.md",
+        "https://docs.openhands.dev/openhands/usage/cli/headless.md",
+        "https://docs.openhands.dev/openhands/usage/cli/mcp-servers.md",
+        "https://docs.openhands.dev/openhands/usage/cli/quick-start.md",
+        "https://docs.openhands.dev/openhands/usage/cli/ide/overview.md",
+        "https://docs.openhands.dev/openhands/usage/cli/critic.md",
+        "https://docs.openhands.dev/overview/skills.md",
+        "https://docs.openhands.dev/overview/plugins.md",
+        "https://docs.openhands.dev/openhands/usage/customization/hooks.md",
+        "https://docs.openhands.dev/openhands/usage/customization/repository.md",
+        "https://docs.openhands.dev/openhands/usage/llms/llms.md",
+        "https://docs.openhands.dev/openhands/usage/llms/local-llms.md",
+        "https://docs.openhands.dev/openhands/usage/environment-variables.md",
+        "https://docs.openhands.dev/openhands/usage/advanced/search-engine-setup.md",
+        "https://docs.openhands.dev/openhands/usage/sandboxes/overview.md",
+        "https://raw.githubusercontent.com/OpenHands/OpenHands-CLI/main/README.md"
+      ]
+    },
+    {
+      "id": "continue-cli",
+      "name": "Continue CLI",
+      "vendor": "Continue",
+      "homepage": "https://docs.continue.dev/",
+      "repo": "https://github.com/continuedev/continue",
+      "sources": [
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/cli/quickstart.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/cli/headless-mode.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/cli/tool-permissions.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/cli/tui-mode.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/cli/configuration.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/guides/cli.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/customize/deep-dives/mcp.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/customize/deep-dives/prompts.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/customize/model-providers/top-level/ollama.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/customize/model-providers/top-level/openai.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/reference.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/docs/snippets/cli-install.mdx",
+        "https://raw.githubusercontent.com/continuedev/continue/main/README.md"
+      ]
     }
   ]
 }
