@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-11T20:05:25.525Z",
+  "generated_at": "2026-09-13T15:11:37.948Z",
   "cells": [
     {
       "agent": "claude-code",
@@ -1419,7 +1419,7 @@
       "notes": "Configured via /mcp add, `copilot mcp add`, ~/.copilot/mcp-config.json, or per-repo .mcp.json / .github/mcp.json; supports stdio, Streamable HTTP and legacy SSE transports. GitHub MCP server is built in.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1430,7 +1430,7 @@
       "notes": "No MCP serve mode is documented anywhere in the command reference; the CLI can be exposed to other clients only via the Agent Client Protocol (`copilot --acp`, public preview), which is a different protocol from MCP.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1441,18 +1441,18 @@
       "notes": "JSON hook files in .github/hooks/*.json (repo) or ~/.copilot/hooks/*.json (user); events include sessionStart, sessionEnd, userPromptSubmitted, preToolUse, postToolUse, agentStop, errorOccurred and more per the hooks reference.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
       "capability": "custom_commands",
-      "value": "yes",
-      "quote": "Commands are an alternative to skills stored as individual .md files in .claude/commands/. The command name is derived from the filename.",
-      "evidence_url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference",
-      "notes": "Markdown command files in .claude/commands/ (name from filename; supports argument-hint, description, allowed-tools, disable-model-invocation); skills are also invocable by slash name (e.g. /my-plugin/search). Note: VS Code-style .github/prompts/*.prompt.md files are marked not supported for Copilot CLI in the customization cheat sheet.",
+      "value": "no",
+      "quote": "GitHub Copilot CLI lacks support for user-defined slash commands.",
+      "evidence_url": "https://github.com/github/copilot-cli/issues/1113",
+      "notes": "The official CLI reference lists only built-in slash commands; user-defined markdown commands are an open feature request (issue #1113), not a shipped feature.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1463,7 +1463,7 @@
       "notes": "SKILL.md folders loaded from .github/skills, .claude/skills, .agents/skills (project) and ~/.copilot/skills, ~/.agents/skills (personal); managed with /skills and `copilot plugins install --skill`.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1474,7 +1474,7 @@
       "notes": "`copilot plugin install PLUGIN@MARKETPLACE` / /plugin; two default marketplaces (copilot-plugins, awesome-copilot); plugins bundle agents, skills, hooks, MCP servers and extensions (plugin.json, marketplace.json per the plugin reference).",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1485,7 +1485,7 @@
       "notes": "Built-in subagents (explore, task, general-purpose, code-review, research, rubber-duck, security-review) plus user-defined custom agents in .github/agents/NAME.md; dispatched via the `task` tool, can run in parallel.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1496,7 +1496,7 @@
       "notes": "Automatically loads .github/copilot-instructions.md, .github/instructions/**/*.instructions.md, AGENTS.md, CLAUDE.md (and .claude/CLAUDE.md), GEMINI.md, plus user-level ~/.copilot/copilot-instructions.md; /init generates copilot-instructions.md.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1507,7 +1507,7 @@
       "notes": "AGENTS.md is listed as a supported instruction location, discovered in repo root, cwd and intermediate directories; supports @path file imports.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1518,7 +1518,7 @@
       "notes": "/permissions [default|assisted|allow-all]; assisted mode attaches an LLM safety recommendation. Additional granular control via --allow-tool / --deny-tool / --allow-all-tools and per-location tool_approvals in settings.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1529,7 +1529,7 @@
       "notes": "First-party OS-level local sandbox (/sandbox enable) with filesystem and network policy, plus cloud sandboxes (copilot --cloud); marked public preview, and local sandboxing on Windows requires a Windows Insiders build.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1540,7 +1540,7 @@
       "notes": "Automatic per-turn file-change tracking with a rewind picker (press Esc twice when idle, or /undo, alias /rewind); choose conversation only or conversation plus files. Works in any directory without Git; not available for remote-backed sessions.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1551,7 +1551,7 @@
       "notes": "Named plan mode via /plan, --plan / --mode plan, or Shift+Tab cycling (standard, plan, autopilot); docs note the edit block is a safety net, not an absolute guarantee.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1562,7 +1562,7 @@
       "notes": "--allow-all / --yolo / --allow-all-tools skip all approvals in interactive or programmatic mode; autopilot mode (--autopilot) adds autonomous continuation; can be disabled by enterprise policy permissions.disableBypassPermissionsMode.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1573,7 +1573,7 @@
       "notes": "`copilot --resume[=ID|name]` opens a picker or resumes a specific session; `--continue` resumes the most recent; /resume and /continue slash commands and a Sessions tab/sidebar in-session.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1584,7 +1584,7 @@
       "notes": "`copilot -p \"...\"` (--prompt) programmatic mode, combinable with --allow-all-tools and --autopilot; also a documented GitHub Actions integration.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1595,7 +1595,7 @@
       "notes": "Ctrl+X then b backgrounds the running task or shell command; background agents are tracked via read_agent (\"Check background agent status\") and -p waits for pending background agents/commands before exiting.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1606,7 +1606,7 @@
       "notes": "Copilot CLI runs several live sessions side by side in one process (sessions sidebar, /restart restores all live sessions), documented as a workflow for parallel work; /fleet additionally runs parallel subagents. --worktree and /worktree are experimental.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1617,7 +1617,7 @@
       "notes": "/model picker or --model; models from Anthropic, OpenAI, Google, xAI depending on plan; Copilot Free/Student users get models only through auto model selection.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1628,7 +1628,7 @@
       "notes": "COPILOT_PROVIDER_BASE_URL / COPILOT_PROVIDER_TYPE (openai, azure, anthropic) / COPILOT_PROVIDER_API_KEY / COPILOT_MODEL env vars; COPILOT_OFFLINE=true offline mode; BYOK sessions can run without GitHub login.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1639,7 +1639,7 @@
       "notes": "Ollama, vLLM and Foundry Local explicitly documented via the openai provider type; example given for a local Ollama instance at http://localhost:11434 with no API key.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1650,7 +1650,7 @@
       "notes": "--effort / --reasoning-effort flag, also adjustable in the /model picker per session; custom agents can set reasoningEffort in frontmatter.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1661,7 +1661,7 @@
       "notes": "/usage shows session statistics: GitHub AI Credits used (the billing unit, not currency), session duration, lines edited and a per-model token breakdown; the same stats print at session end. /context shows context-window usage.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1672,7 +1672,7 @@
       "notes": "Attach via @path reference, drag-and-drop, Alt+V paste from clipboard, or --attachment PATH; sending images requires the selected model and org policy to allow vision input.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1683,7 +1683,7 @@
       "notes": "A web_search tool is enabled by default (removable with --excluded-tools), but it is provided by the bundled GitHub MCP server rather than being a native CLI tool, so the rubric counts it as partial.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1694,7 +1694,7 @@
       "notes": "Built-in web_fetch tool (\"Fetch and parse web content\") with SSRF protections and URL permission prompts; localhost access via COPILOT_WEB_FETCH_ALLOW_LOCALHOST=1.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1705,7 +1705,7 @@
       "notes": "Official VS Code connection (/ide): editor selection as context, diffs shown in VS Code, diagnostics, session transcripts and 'Resume in Terminal'; ACP server also enables other editors.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1716,7 +1716,7 @@
       "notes": "/pr create, /pr fix, /pr auto, /pr automerge; commits and pushes via git/gh with permission prompts; natural-language commit and PR creation also documented on the About page.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1727,7 +1727,7 @@
       "notes": "Copilot Memory is agent-written cross-session memory (repository facts and user preferences Copilot deduces as it works), but it is in public preview, available on paid Copilot plans only, and disabled by default in prompt mode (--enable-memory).",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1738,7 +1738,7 @@
       "notes": "Native Windows via PowerShell v6+ (winget install GitHub.Copilot or npm); WSL also supported. Local sandboxing on Windows requires a Windows Insiders build.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1749,7 +1749,7 @@
       "notes": "Proprietary 'GitHub Copilot CLI License' that forbids modification/derivative works; the public repo contains only README, LICENSE.md, changelog.md and install.sh, no source code.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "copilot-cli",
@@ -1760,7 +1760,7 @@
       "notes": "Copilot Free plan (at no cost, individual developers only) includes Copilot CLI with an AI-credit allowance and auto model selection only; CLI docs also state it is available with all Copilot plans.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "cline",
@@ -3179,7 +3179,7 @@
       "notes": "Configured via amp.mcpServers in settings.json (local command/args or remote url/headers), `amp mcp add <name> ...`, `--mcp-config` flag, remote MCP definitions stored on ampcode.com (`amp mcp remote`), and MCP servers bundled in skills via mcp.json. Both stdio and remote HTTP/SSE servers are documented.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3190,7 +3190,7 @@
       "notes": "The MCP docs, CLI docs, SDK page, and news only describe Amp as an MCP client; no serve/MCP-server mode for exposing Amp's tools to other clients is documented.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3201,7 +3201,7 @@
       "notes": "Lifecycle events session.start, agent.start, tool.call (allow/reject/modify/synthesize), tool.result, and agent.end are available, but only by writing a TypeScript/JavaScript plugin (amp.on(...)) placed in .amp/plugins/ or ~/.config/amp/plugins/, not via plain user configuration or shell-script hooks.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3212,7 +3212,7 @@
       "notes": "Dedicated file-based custom commands were removed in January 2026 in favour of skills. Reusable prompt templates in files exist only as SKILL.md skills, which are primarily model-invoked; explicit command-palette commands require plugin code (amp.registerCommand).",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3223,7 +3223,7 @@
       "notes": "SKILL.md directories with YAML frontmatter are loaded from .agents/skills/, ~/.config/agents/skills/, ~/.agents/skills/, ~/.config/amp/skills/, Claude-compatible .claude/skills/ locations, amp.skills.path, plus hosted personal/workspace skill repositories; install with `amp skill add <source>`.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3234,7 +3234,7 @@
       "notes": "TypeScript/JavaScript plugins add tools, commands, event hooks, bundled skills, custom agent modes and subagents; installed with `amp plugins add <url>`, via .amp/plugins/ (project), ~/.config/amp/plugins/ (machine), or hosted personal/workspace plugin repositories with share URLs.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3245,7 +3245,7 @@
       "notes": "Built-in subagents (Search, Oracle, Librarian, Read Thread) run with their own context window and tools; the main agent chooses them automatically or on request, and plugins can define custom subagents exposed as tools.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3256,7 +3256,7 @@
       "notes": "AGENTS.md in cwd, parent directories and subtrees is loaded automatically; falls back to AGENT.md or CLAUDE.md if no AGENTS.md exists; also $HOME/.config/amp/AGENTS.md, $HOME/.config/AGENTS.md and system-wide /etc/ampcode/AGENTS.md.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3267,7 +3267,7 @@
       "notes": "AGENTS.md is the primary, automatically loaded instruction file; subtree AGENTS.md files load when the agent reads files in that subtree.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3278,7 +3278,7 @@
       "notes": "No built-in named approval modes; tool use is unrestricted by default and gating is only available by writing a custom policy plugin, which the rubric counts as partial (only through an add-on).",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3289,7 +3289,7 @@
       "notes": "Isolation is provided by running the agent in a remote, metered orb (fresh isolated cloud environment), not by an OS-level sandbox for local shell commands; the Tools page instead recommends a policy plugin or an isolated development environment for untrusted sources.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3300,7 +3300,7 @@
       "notes": "An undo_edit tool is listed among the built-in session tools and IDE-connected sessions have full undo support; no session-wide checkpoint or rewind command is documented, so partial.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3311,7 +3311,7 @@
       "notes": "No named read-only/plan mode; planning is a prompt convention (tell the agent not to edit files). The Dial modes (low/medium/high/ultra) control effort, not edit permissions.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3322,7 +3322,7 @@
       "notes": "Unattended operation is the default: no approval prompts for tools or shell commands in interactive or execute (-x) mode unless a custom plugin adds them.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3333,7 +3333,7 @@
       "notes": "Any previous thread can be resumed by ID with amp threads continue T-… (also with -x/--stream-json); amp threads list and amp threads search find older threads, and threads open across web, CLI and mobile apps.",
       "confidence": "low",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3344,7 +3344,7 @@
       "notes": "Execute mode `amp -x \"prompt\"` (or piped stdin) runs one prompt and exits; `--stream-json` gives machine-readable output; AMP_API_KEY authenticates in CI; `-ox` runs the prompt in a remote orb.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3355,7 +3355,7 @@
       "notes": "Background execution is achieved by spawning work into remote orb threads (`amp -ox`, plugin createThread) or subagents rather than backgrounding a shell command inside the current local session; the orb terminal runs in a shared tmux session for long-running commands.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3366,7 +3366,7 @@
       "notes": "Parallel work is a supported workflow: several orb threads can run at once on the same project, subagents can split independent work in parallel, and Agent to Agent lets one thread start and await others.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3377,7 +3377,7 @@
       "notes": "Modes route to different models (e.g. GPT-6 Astra, Claude Fable 5.1, GPT-5.6 Sol), switched with Ctrl+S or `--mode`; the dial editor lets you pin a specific model per mode for main agent/oracle/subagents, and plugins add custom modes with their own model.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3388,7 +3388,7 @@
       "notes": "Listed as a feature on every plan on the pricing page (wording changed from \"Bring your own model provider keys\" after 2026-09-10); own provider keys are configured under Model Routing. No generic OpenAI-compatible custom endpoint setting is documented.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-12"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3399,7 +3399,7 @@
       "notes": "Model routing is hosted (Anthropic/OpenAI/xAI models); Ollama, LM Studio, llama.cpp, vLLM or any local endpoint are not mentioned anywhere in the docs or news.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3410,7 +3410,7 @@
       "notes": "Alt+D toggles reasoning effort in the CLI; each Dial mode also fixes a reasoning-effort level and custom modes/plugins can set their own.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3421,7 +3421,7 @@
       "notes": "amp.showCosts (default true) shows thread cost in the CLI; `amp usage` and the thread sidebar show credit balance and per-thread cost; streaming JSON includes token usage.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3432,7 +3432,7 @@
       "notes": "Images can be pasted from the clipboard (Ctrl+V), @-mentioned by file path, or sent as base64 image blocks via --stream-json-input.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3443,7 +3443,7 @@
       "notes": "A built-in web_search tool is listed among the session tools in the streaming JSON reference and web search is billed as a non-model tool.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3454,7 +3454,7 @@
       "notes": "The streaming JSON reference lists read_web_page among the built-in session tools; no separate prose page documents it, so the tool list itself is the evidence.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3465,7 +3465,7 @@
       "notes": "The CLI connects to editors via the `ide connect` palette command (sees open file/selection, edits with IDE undo); Neovim needs the official Amp Neovim plugin. The former standalone VS Code/Cursor extensions were discontinued in March 2026.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3476,7 +3476,7 @@
       "notes": "Commits carry Amp-Thread-ID and Co-authored-by trailers, projects have Ship/Push to Branch behaviors, and gh is preinstalled and authenticated in orbs for PR creation; local CLI threads use the machine's own git credentials.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3487,7 +3487,7 @@
       "notes": "No automatic cross-session memory is documented. Persistent context is the user-maintained AGENTS.md, which Amp updates only when asked; the same situation is scored no for Cursor CLI.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3498,7 +3498,7 @@
       "notes": "Official support statement is Windows via WSL, although the settings docs list native %USERPROFILE% and %ProgramData% paths and the install widget has a Windows tab (JS-rendered, not verifiable).",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
@@ -3509,29 +3509,29 @@
       "notes": "Amp is closed source: no public source repository exists (only sourcegraph/amp-examples-and-guides for docs), and the vendor's npm package declares a custom LICENSE.md rather than an OSI license.",
       "confidence": "medium",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "amp",
       "capability": "free_tier",
-      "value": "no",
-      "quote": "If not, you'll need to keep paying for all of your Amp usage.",
-      "evidence_url": "https://ampcode.com/news/amp-free-is-full-for-now",
-      "notes": "The ad-supported Amp Free ($10/day) was closed to new users in Feb 2026 and is being paused/reduced for existing users (May 2026 update); the pricing page lists only paid tiers (Megawatt $20, Gigawatt $200) and usage billing.",
-      "confidence": "medium",
+      "value": "partial",
+      "quote": "Amp is now free to use when you bring your own compute and model subscriptions/keys.",
+      "evidence_url": "https://ampcode.com/news/free-agent",
+      "notes": "As of 2026-09-13 Amp is free when you bring your own compute and model keys (free Hobby tier); Amp-hosted usage is still paid (Megawatt/Gigawatt) and hosted free credits remain limited.",
+      "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-10"
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "mcp_client",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Qwen Code can connect to external tools and data sources through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction).",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/mcp.md",
+      "notes": "Qwen Code connects to external MCP servers configured via mcpServers / qwen mcp add and managed with /mcp.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
@@ -3547,332 +3547,332 @@
     {
       "agent": "qwen-code",
       "capability": "hooks",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Hooks allow users to execute custom scripts or programs at specific points in the application lifecycle, such as before tool execution, after tool execution, at session start/end, and during other key events.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/hooks.md",
+      "notes": "Qwen Code has a full lifecycle hooks system (PreToolUse, PostToolUse, session start/end) enabled by default.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "custom_commands",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Custom commands now use Markdown format with optional YAML frontmatter. TOML format is deprecated but still supported for backwards compatibility.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The commands doc has a dedicated Custom Commands section documenting user-defined commands in Markdown (with legacy TOML).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "skills",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "This guide shows you how to create, use, and manage Agent Skills in **Qwen Code**.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/skills.md",
+      "notes": "Qwen Code has an Agent Skills system (SKILL.md folders, model-invoked, /skills panel, /learn).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "plugins",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Qwen Code extensions package prompts, MCP servers, subagents, skills and custom commands into a familiar and user-friendly format.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/extension/introduction.md",
+      "notes": "Qwen Code has an extension/plugin system with /extensions install, a marketplace, and native support for portable Agent Plugins v1 and Claude Code / Gemini CLI plugins.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "subagents",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Subagents are specialized AI assistants that handle specific types of tasks within Qwen Code.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/sub-agents.md",
+      "notes": "Subagents are a documented feature: specialized AI assistants with separate context and controlled tools.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "project_instructions",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "**QWEN.md** — instructions _you_ write once and Qwen reads every session",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/memory.md",
+      "notes": "QWEN.md is a project instruction file (project root, committed to source control) loaded every session, plus global and local variants.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "agents_md",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "If your repository already has an `AGENTS.md` file for other AI tools, Qwen reads that too. No need to duplicate instructions.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/memory.md",
+      "notes": "The live memory docs state Qwen Code reads an existing AGENTS.md file, so the value is not unknown.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "permission_modes",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Qwen Code offers five distinct permission modes that allow you to flexibly control how AI interacts with your code and system based on task complexity and risk level.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/approval-mode.md",
+      "notes": "Qwen Code offers five distinct permission/approval modes (Plan, Ask Permissions/default, Auto-Edit, Auto, YOLO) cyclable with Shift+Tab.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "sandbox",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "This document explains how to run Qwen Code inside a sandbox to reduce risk when tools execute shell commands or modify files.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/sandbox.md",
+      "notes": "Built-in sandboxing via macOS Seatbelt and Docker/Podman containers, configured with tools.sandbox.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "checkpoints",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Revert project files to the checkpoint before a tool call ran",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The CLI ships /restore (revert files to a pre-tool-call checkpoint) and /rewind (rewind conversation to a previous turn).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "plan_mode",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Plan Mode instructs Qwen Code to create a plan by analyzing the codebase with **read-only** operations",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/approval-mode.md",
+      "notes": "Plan Mode is a documented read-only analysis mode (also an exit-plan-mode tool exists).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "full_auto",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Use YOLO sparingly**: Only for trusted automation in controlled environments",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/approval-mode.md",
+      "notes": "YOLO approval mode auto-approves both file editing and shell commands for unattended/CI automation.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "session_resume",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Resume a previous conversation session",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "/resume (and headless --resume / --continue) restore previous conversation sessions scoped to the project.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "headless",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Headless mode allows you to run Qwen Code programmatically from command line\nscripts and automation tools without any interactive UI.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/headless.md",
+      "notes": "A dedicated headless mode runs qwen -p in scripts and CI/CD with structured output and exit codes.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "background_tasks",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Scheduled tasks let Qwen Code re-run a prompt automatically on an interval.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/scheduled-tasks.md",
+      "notes": "Scheduled tasks and /loop run prompts on a cron interval in the background; subagents also support run_in_background completion notifications.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "parallel_agents",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Qwen Code can coordinate several teammates with the experimental Agent Team runtime.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/multi-agent-coordination.md",
+      "notes": "Background subagents run concurrently and Arena runs several models on the same task in isolated worktrees; a /coordinate Agent Team runtime (experimental) coordinates multiple teammates.",
+      "confidence": "medium",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "model_selection",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Switch model used in current session",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The /model command switches the model in the current session, with variants for fast/vision/compaction/image models.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "byok_providers",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "**Custom Provider**: manually connect a local server, proxy, or unsupported provider — supports OpenAI, Anthropic, Gemini, and other compatible endpoints.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/configuration/auth.md",
+      "notes": "The auth docs expose a Custom Provider option plus many third-party providers, each connected with your own API key.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "local_models",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Any third-party provider or local model (Ollama / vLLM). Switch at runtime.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+      "notes": "README and auth docs support local models via a custom/local server endpoint (Ollama / vLLM).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "thinking_control",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Set reasoning effort for thinking-capable models",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The /effort command sets reasoning effort (low/medium/high/xhigh/max) for thinking-capable models.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "cost_display",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Show per-model token breakdown and estimated cost",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The /stats dashboard and /stats model show token usage and estimated cost.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "image_input",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Set the vision-bridge model used to transcribe images for a text-only main model",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/commands.md",
+      "notes": "The CLI accepts image inputs; a vision-bridge model transcribes images for text-only main models, and terminal-images renders image parts. Multimodal Qwen models take images directly.",
+      "confidence": "medium",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "web_search",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Token Plan and Standard API Key also enable the built-in [`web_search` tool](../../developers/tools/web-search.md) with no extra setup.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/configuration/auth.md",
+      "notes": "A built-in web_search tool is available (enabled with no extra setup on Token Plan / Standard API Key), with a dedicated tool doc.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "web_fetch",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Use `web_fetch` to fetch content from a specified URL and process it using an AI model.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/developers/tools/web-fetch.md",
+      "notes": "A built-in web_fetch tool fetches URL content and processes it with a model.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "ide_integration",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "IDE Plugins (VS Code / JetBrains / Zed)",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+      "notes": "Official IDE plugins for VS Code, Zed, and JetBrains, each with dedicated integration docs.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "git_pr_workflow",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "Review code changes for correctness, security, performance, and code quality using `/review`.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/code-review.md",
+      "notes": "The /review command reviews a pull request by number or URL and can post inline PR comments; Qwen Code can also create commits and use git worktrees.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "auto_memory",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "**Auto-memory** — notes Qwen writes itself based on what it learns from you",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/memory.md",
+      "notes": "Docs document an Auto-memory mechanism that carries knowledge across sessions, controlled by memory.enableManagedAutoMemory (default true).",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "windows_native",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+      "notes": "README provides a native Windows PowerShell install one-liner and a Windows desktop app; approval-mode docs even note a Windows-specific Tab keybinding.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "open_source",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "yes",
+      "quote": "**Open-source, inside and out** — The framework and the Qwen models are open-source. They evolve together. No vendor lock-in.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/README.md",
+      "notes": "The repository is licensed Apache 2.0 and the README states the framework is open-source.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     },
     {
       "agent": "qwen-code",
       "capability": "free_tier",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "no",
+      "quote": "The Qwen OAuth free tier was discontinued on 2026-04-15.",
+      "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/configuration/auth.md",
+      "notes": "The former Qwen OAuth free tier was explicitly discontinued on 2026-04-15 and is no longer a selectable auth option; remaining options are paid subscription or BYO API key.",
+      "confidence": "high",
+      "verified": true,
+      "verified_at": "2026-09-13"
     }
   ]
 }
