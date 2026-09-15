@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="https://barbarkaragul-oss.github.io/agentmatrix/"><img src="docs/screenshot.png" alt="The interactive matrix: 10 agents by 32 capabilities, every cell colour-coded yes, partial or no, and clickable to its source quote" width="900"></a>
+  <a href="https://barbarkaragul-oss.github.io/agentmatrix/"><img src="docs/demo.gif" alt="The interactive matrix, 22 agents by 32 capabilities: typing mcp filters it to the MCP rows; clicking the Claude Code / MCP client cell opens the verdict, the vendor's verbatim sentence, the source URL and the date it was last found there; then the same for Cline" width="900"></a>
 </p>
 
 <!-- stats:start -->
