@@ -1,22 +1,31 @@
 {
-  "run_at": "2026-09-13T16:48:24.639Z",
-  "model": "none (mechanical quote re-check, agent junie-cli only)",
+  "run_at": "2026-09-17T16:06:17.700Z",
+  "model": "none (mechanical quote re-check)",
   "changes": [
     {
-      "agent": "junie-cli",
-      "capability": "free_tier",
+      "agent": "cursor-cli",
+      "capability": "byok_providers",
       "from": "partial",
       "to": "unknown",
       "quote": "",
       "evidence_url": "",
-      "notes": "UNVERIFIED on 2026-09-13 (quote not found on page; was partial): \"5 AI credits included, enough for a real task\" at https://junie.jetbrains.com/ | The Free plan starts with 5 AI credits and no card; beyond that the CLI can still be used without a JetBrains subscription via Bring Your Own Key or a locally running model, while JetBrains-hosted usage is paid."
+      "notes": "UNVERIFIED on 2026-09-17 (quote not found on page; was partial): \"You can add your own API keys so Cursor uses your preferred AI models. This lets you send unlimited AI messages at your own cost through providers like OpenAI, Anthropic, or Google.\" at https://cursor.com/help/models-and-usage/api-keys | Own keys for OpenAI, Anthropic, Google, Azure OpenAI and AWS Bedrock are configured in the editor settings and apply to the account; the only CLI-specific path is agent bedrock. Requests are still routed through Cursor servers and no custom or OpenAI-compatible endpoint is documented, so partial."
+    },
+    {
+      "agent": "goose",
+      "capability": "plan_mode",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-09-17 (quote not found on page; was yes): \"Enter 'plan' mode with optional message. Create a plan based on the current messages and ask user if they want to act on it\" at https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/goose-cli-commands.md | CLI `/plan` enters a named plan mode (exit with `/endplan`) that asks clarifying questions and produces a plan before acting; can use a separate planner model via GOOSE_PLANNER_PROVIDER/MODEL. Desktop has no plan mode (prompt convention only)."
     }
   ],
   "stats": {
-    "agents_checked": 1,
+    "agents_checked": 22,
     "agents_failed": [],
-    "cells_total": 32,
-    "cells_verified": 31,
-    "cells_unknown": 1
+    "cells_total": 704,
+    "cells_verified": 680,
+    "cells_unknown": 24
   }
 }
