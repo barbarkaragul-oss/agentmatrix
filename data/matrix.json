@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-17T16:06:17.700Z",
+  "generated_at": "2026-09-17T16:07:27.954Z",
   "cells": [
     {
       "agent": "claude-code",
@@ -1270,13 +1270,13 @@
     {
       "agent": "cursor-cli",
       "capability": "byok_providers",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "UNVERIFIED on 2026-09-17 (quote not found on page; was partial): \"You can add your own API keys so Cursor uses your preferred AI models. This lets you send unlimited AI messages at your own cost through providers like OpenAI, Anthropic, or Google.\" at https://cursor.com/help/models-and-usage/api-keys | Own keys for OpenAI, Anthropic, Google, Azure OpenAI and AWS Bedrock are configured in the editor settings and apply to the account; the only CLI-specific path is agent bedrock. Requests are still routed through Cursor servers and no custom or OpenAI-compatible endpoint is documented, so partial.",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "partial",
+      "quote": "You can add your own API keys so Cursor uses your preferred AI models. Your provider (OpenAI, Anthropic, Google, and others) bills you directly for the model cost of those requests.",
+      "evidence_url": "https://cursor.com/help/models-and-usage/api-keys",
+      "notes": "Own keys for OpenAI, Anthropic, Google, Azure OpenAI and AWS Bedrock are configured in the editor settings and apply to the account; the only CLI-specific path is agent bedrock. Requests are still routed through Cursor servers and no custom or OpenAI-compatible endpoint is documented, so partial.",
+      "confidence": "medium",
+      "verified": true,
+      "verified_at": "2026-09-17"
     },
     {
       "agent": "cursor-cli",
@@ -2601,13 +2601,13 @@
     {
       "agent": "goose",
       "capability": "plan_mode",
-      "value": "unknown",
-      "quote": "",
-      "evidence_url": "",
-      "notes": "UNVERIFIED on 2026-09-17 (quote not found on page; was yes): \"Enter 'plan' mode with optional message. Create a plan based on the current messages and ask user if they want to act on it\" at https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/guides/goose-cli-commands.md | CLI `/plan` enters a named plan mode (exit with `/endplan`) that asks clarifying questions and produces a plan before acting; can use a separate planner model via GOOSE_PLANNER_PROVIDER/MODEL. Desktop has no plan mode (prompt convention only).",
-      "confidence": "low",
-      "verified": false,
-      "verified_at": ""
+      "value": "partial",
+      "quote": "In goose, we use a structured RPI workflow using recipes to systematically tackle complex codebase changes.",
+      "evidence_url": "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/tutorials/rpi.md",
+      "notes": "The CLI plan mode (`/plan`, `/endplan`) was removed on 2026-09-14 (aaif-goose/goose#12061). Planning is now a prompt workflow: the Research, Plan, Implement tutorial installs recipes as custom slash commands such as `/create_plan`, and it does not document that edits are blocked while planning. Chat Only mode (`/mode chat`) blocks file changes but also all extension use, so the agent cannot explore the code; it is not counted as a plan mode.",
+      "confidence": "medium",
+      "verified": true,
+      "verified_at": "2026-09-17"
     },
     {
       "agent": "goose",
