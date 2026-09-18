@@ -21,7 +21,7 @@
 </p>
 
 <!-- stats:start -->
-**22 agents × 32 capabilities · 682/704 cells verified against their source · last verification 2026-09-17** · ✅ 473 · 🟡 110 · ❌ 99 · ❔ 22
+**22 agents × 32 capabilities · 682/704 cells verified against their source · last verification 2026-09-18** · ✅ 473 · 🟡 110 · ❌ 99 · ❔ 22
 <!-- stats:end -->
 
 "Does Codex CLI have hooks? Can Gemini CLI act as an MCP server? Which of these run natively on Windows?" Answers to questions like these are usually given from memory, and comparison tables are rarely dated or sourced. This repository answers from the documentation, and shows its work:
@@ -127,9 +127,7 @@ Values follow a written rubric per capability (see [`data/capabilities.json`](da
 ## Recent changes
 
 <!-- changes:start -->
-Last run 2026-09-17:
-
-- **Goose** · Plan mode: yes → **partial** ([source](https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/tutorials/rpi.md))
+_Last run 2026-09-18: every quote was still present at its source, no value changed._
 <!-- changes:end -->
 
 ## How it works

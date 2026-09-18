@@ -1,17 +1,7 @@
 {
-  "run_at": "2026-09-17T16:07:27.954Z",
-  "model": "none (mechanical quote re-check; two cells re-quoted by hand from the current documentation)",
-  "changes": [
-    {
-      "agent": "goose",
-      "capability": "plan_mode",
-      "from": "yes",
-      "to": "partial",
-      "quote": "In goose, we use a structured RPI workflow using recipes to systematically tackle complex codebase changes.",
-      "evidence_url": "https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/tutorials/rpi.md",
-      "notes": "The CLI plan mode (`/plan`, `/endplan`) was removed on 2026-09-14 (aaif-goose/goose#12061). Planning is now a prompt workflow: the Research, Plan, Implement tutorial installs recipes as custom slash commands such as `/create_plan`, and it does not document that edits are blocked while planning. Chat Only mode (`/mode chat`) blocks file changes but also all extension use, so the agent cannot explore the code; it is not counted as a plan mode."
-    }
-  ],
+  "run_at": "2026-09-18T12:00:32.220Z",
+  "model": "none (mechanical quote re-check)",
+  "changes": [],
   "stats": {
     "agents_checked": 22,
     "agents_failed": [],
