@@ -1,12 +1,31 @@
 {
-  "run_at": "2026-09-18T12:00:32.220Z",
+  "run_at": "2026-09-21T14:32:19.032Z",
   "model": "none (mechanical quote re-check)",
-  "changes": [],
+  "changes": [
+    {
+      "agent": "claude-code",
+      "capability": "agents_md",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-09-21 (quote not found on page; was partial): \"Claude Code reads `CLAUDE.md`, not `AGENTS.md`. If your repository already uses `AGENTS.md` for other coding agents, create a `CLAUDE.md` that imports it so both tools read the same instructions without duplicating them.\" at https://code.claude.com/docs/en/memory.md | AGENTS.md is not loaded automatically; docs give a workaround of `@AGENTS.md` import inside CLAUDE.md or `ln -s AGENTS.md CLAUDE.md`. With CLAUDE_CODE_NEW_INIT=1, /init reads AGENTS.md when generating CLAUDE.md."
+    },
+    {
+      "agent": "cline",
+      "capability": "project_instructions",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-09-21 (quote not found on page; was yes): \"**Workspace rules** go in `.clinerules/` at your project root.\" at https://docs.cline.bot/customization/cline-rules.md | Automatically loads .clinerules/ (all .md/.txt files, optional `paths:` frontmatter for conditional rules), .cline/rules/, plus .cursorrules, .windsurfrules and AGENTS.md; global rules in ~/Documents/Cline/Rules or ~/.cline/rules."
+    }
+  ],
   "stats": {
     "agents_checked": 22,
     "agents_failed": [],
     "cells_total": 704,
-    "cells_verified": 682,
-    "cells_unknown": 22
+    "cells_verified": 680,
+    "cells_unknown": 24
   }
 }
