@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T12:00:32.220Z",
+  "generated_at": "2026-09-23T13:10:00.000Z",
   "cells": [
     {
       "agent": "claude-code",
@@ -93,13 +93,13 @@
     {
       "agent": "claude-code",
       "capability": "agents_md",
-      "value": "partial",
-      "quote": "Claude Code reads `CLAUDE.md`, not `AGENTS.md`. If your repository already uses `AGENTS.md` for other coding agents, create a `CLAUDE.md` that imports it so both tools read the same instructions without duplicating them.",
+      "value": "yes",
+      "quote": "Claude Code can read [`AGENTS.md`](/docs/en/glossary#agents-md) as your project instructions, so a repository already set up for other coding agents works without adding a `CLAUDE.md`, an import, or a setting.",
       "evidence_url": "https://code.claude.com/docs/en/memory.md",
-      "notes": "AGENTS.md is not loaded automatically; docs give a workaround of `@AGENTS.md` import inside CLAUDE.md or `ln -s AGENTS.md CLAUDE.md`. With CLAUDE_CODE_NEW_INIT=1, /init reads AGENTS.md when generating CLAUDE.md.",
+      "notes": "Read automatically at session start when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` sits in the working directory or above it; the default `claude-md-or-agents-md` needs no configuration and `claude-md-and-agents-md` loads both files. Requires v2.1.277 or later and is unavailable in some sessions (Amazon Bedrock, telemetry disabled, the built-in `agents-md` plugin off), where the docs still prescribe an `@AGENTS.md` import.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-18"
+      "verified_at": "2026-09-23"
     },
     {
       "agent": "claude-code",
@@ -1843,12 +1843,12 @@
       "agent": "cline",
       "capability": "project_instructions",
       "value": "yes",
-      "quote": "**Workspace rules** go in `.clinerules/` at your project root.",
+      "quote": "The example uses `.clinerules/`; you can put the same rule files in `.cline/rules/` instead. Both directories are searched when present, so you do not need to copy rules into both locations.",
       "evidence_url": "https://docs.cline.bot/customization/cline-rules.md",
-      "notes": "Automatically loads .clinerules/ (all .md/.txt files, optional `paths:` frontmatter for conditional rules), .cline/rules/, plus .cursorrules, .windsurfrules and AGENTS.md; global rules in ~/Documents/Cline/Rules or ~/.cline/rules.",
+      "notes": "Files: `.clinerules/` or `.cline/rules/` at the project root (both searched when present), plus auto-detected `.cursorrules` and `.windsurfrules`, and `AGENTS.md`; global rules in `Documents/Cline/Rules`, `~/.cline/rules` or `~/Cline/Rules`. Markdown rule files without `paths:` frontmatter are always active; workspace rules win over global on conflict.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-18"
+      "verified_at": "2026-09-23"
     },
     {
       "agent": "cline",
@@ -3636,12 +3636,12 @@
       "agent": "qwen-code",
       "capability": "sandbox",
       "value": "yes",
-      "quote": "This document explains how to run Qwen Code inside a sandbox to reduce risk when tools execute shell commands or modify files.",
+      "quote": "Sandboxing isolates potentially dangerous operations (such as shell commands or file modifications) from your host system, providing a security barrier between the CLI and your environment.",
       "evidence_url": "https://raw.githubusercontent.com/QwenLM/qwen-code/main/docs/users/features/sandbox.md",
-      "notes": "Built-in sandboxing via macOS Seatbelt and Docker/Podman containers, configured with tools.sandbox.",
+      "notes": "Two layers: a Linux tool-execution sandbox (`tools.executionSandbox`, bwrap backend, required `filesystem` and `network` policies, operator settings only) and the whole-CLI methods — macOS Seatbelt (`sandbox-exec`) and Docker/Podman containers. The older `tools.sandbox` bwrap path now raises a migration error.",
       "confidence": "high",
       "verified": true,
-      "verified_at": "2026-09-18"
+      "verified_at": "2026-09-23"
     },
     {
       "agent": "qwen-code",
