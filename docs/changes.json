@@ -1,7 +1,17 @@
 {
-  "run_at": "2026-09-18T12:00:32.220Z",
-  "model": "none (mechanical quote re-check)",
-  "changes": [],
+  "run_at": "2026-09-23T13:10:00.000Z",
+  "model": "none (full mechanical quote re-check run by hand on 2026-09-23; three cells re-quoted from the current documentation, one value change)",
+  "changes": [
+    {
+      "agent": "claude-code",
+      "capability": "agents_md",
+      "from": "partial",
+      "to": "yes",
+      "quote": "Claude Code can read [`AGENTS.md`](/docs/en/glossary#agents-md) as your project instructions, so a repository already set up for other coding agents works without adding a `CLAUDE.md`, an import, or a setting.",
+      "evidence_url": "https://code.claude.com/docs/en/memory.md",
+      "notes": "Read automatically at session start when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` sits in the working directory or above it; the default `claude-md-or-agents-md` needs no configuration and `claude-md-and-agents-md` loads both files. Requires v2.1.277 or later and is unavailable in some sessions (Amazon Bedrock, telemetry disabled, the built-in `agents-md` plugin off), where the docs still prescribe an `@AGENTS.md` import."
+    }
+  ],
   "stats": {
     "agents_checked": 22,
     "agents_failed": [],
