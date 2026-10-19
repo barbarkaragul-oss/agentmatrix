@@ -1,22 +1,238 @@
 {
-  "run_at": "2026-09-23T13:10:00.000Z",
-  "model": "none (full mechanical quote re-check run by hand on 2026-09-23; three cells re-quoted from the current documentation, one value change)",
+  "run_at": "2026-10-19T14:57:59.217Z",
+  "model": "none (mechanical quote re-check)",
   "changes": [
     {
       "agent": "claude-code",
-      "capability": "agents_md",
+      "capability": "plugins",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Plugins extend Claude Code with skills, agents, hooks, and MCP servers. Plugin marketplaces are catalogs that help you discover and install these extensions without building them yourself.\" at https://code.claude.com/docs/en/discover-plugins.md | Plugin format uses a .claude-plugin/plugin.json manifest; install via `/plugin install <name>@<marketplace>` from the official claude-plugins-official marketplace, the claude-community marketplace, or private/team marketplaces; `--plugin-dir` for local development."
+    },
+    {
+      "agent": "claude-code",
+      "capability": "sandbox",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"The sandbox is built into Claude Code and runs on macOS, Linux, and WSL2. Native Windows is not supported.\" at https://code.claude.com/docs/en/sandboxing.md | Built-in Bash sandbox with filesystem and network isolation: Seatbelt on macOS, bubblewrap + socat (optional seccomp) on Linux/WSL2; configured via /sandbox and sandbox.* settings. Not available on native Windows."
+    },
+    {
+      "agent": "claude-code",
+      "capability": "web_fetch",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"WebFetch takes a URL and a prompt describing what to extract. It fetches the page, converts the response to Markdown when the server returns HTML, and runs the prompt against the content using a small, fast model.\" at https://code.claude.com/docs/en/tools-reference.md | Built-in WebFetch tool with domain-scoped permission rules (WebFetch(domain:example.com)); result is an extraction summary rather than the raw page."
+    },
+    {
+      "agent": "codex-cli",
+      "capability": "background_tasks",
       "from": "partial",
-      "to": "yes",
-      "quote": "Claude Code can read [`AGENTS.md`](/docs/en/glossary#agents-md) as your project instructions, so a repository already set up for other coding agents works without adding a `CLAUDE.md`, an import, or a setting.",
-      "evidence_url": "https://code.claude.com/docs/en/memory.md",
-      "notes": "Read automatically at session start when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` sits in the working directory or above it; the default `claude-md-or-agents-md` needs no configuration and `claude-md-and-agents-md` loads both files. Requires v2.1.277 or later and is unavailable in some sessions (Amazon Bedrock, telemetry disabled, the built-in `agents-md` plugin off), where the docs still prescribe an `@AGENTS.md` import."
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"Use the unified PTY-backed exec tool (stable; enabled by default except on Windows).\" at https://learn.chatgpt.com/docs/config-file/config-reference | /ps lists background terminals with recent output and /stop cancels them. Background terminals come from the unified_exec tool, which is stable but enabled by default only outside Windows (features.unified_exec), so the rubric counts it as partial."
+    },
+    {
+      "agent": "codex-cli",
+      "capability": "parallel_agents",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"Run tasks in isolated cloud environments, work in parallel, and start work from the web, GitHub, GitLab, Linear, or Slack.\" at https://learn.chatgpt.com/docs/cloud | In-session parallel subagents are stable and on by default (features.multi_agent), which the rubric counts as partial. Codex cloud runs tasks in parallel, but the CLI entry point (codex cloud) is marked experimental, and git worktrees / parallel chats are ChatGPT desktop app features."
+    },
+    {
+      "agent": "codex-cli",
+      "capability": "windows_native",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"When you run Codex natively on Windows, agent mode uses a Windows sandbox to block filesystem writes outside the working folder and prevent network access without your explicit approval.\" at https://learn.chatgpt.com/docs/windows/windows-sandbox | Native PowerShell install (install.ps1) and a native Windows sandbox with elevated/unelevated modes are documented; WSL2 is an alternative. Caveat: unified_exec background terminals are off by default on Windows."
+    },
+    {
+      "agent": "gemini-cli",
+      "capability": "open_source",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"- **🛡️ Open source**: Apache 2.0 licensed.\" at https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md | Source is public at github.com/google-gemini/gemini-cli under the Apache License 2.0 (LICENSE file in repo root)."
+    },
+    {
+      "agent": "cursor-cli",
+      "capability": "free_tier",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"The Hobby plan gives you access to Cursor's core features with limited usage. You can use Agent, Chat, and Tab completions with the Auto model.\" at https://cursor.com/help/account-and-billing/pricing | The free Hobby plan includes Agent with limited usage, restricted to the Auto model; some surfaces such as the JetBrains ACP integration require a paid plan."
+    },
+    {
+      "agent": "copilot-cli",
+      "capability": "checkpoints",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"As Copilot works, Copilot CLI tracks the file changes it makes as it responds to each prompt.\" at https://docs.github.com/en/copilot/concepts/agents/copilot-cli/cancel-and-roll-back | Automatic per-turn file-change tracking with a rewind picker (press Esc twice when idle, or /undo, alias /rewind); choose conversation only or conversation plus files. Works in any directory without Git; not available for remote-backed sessions."
+    },
+    {
+      "agent": "copilot-cli",
+      "capability": "full_auto",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"The --allow-all and --yolo options allow the CLI agent to use all tools, paths, and URLs. You can also set these permissions during an interactive session, by using the /allow-all or /yolo slash commands.\" at https://docs.github.com/en/copilot/concepts/agents/copilot-cli/autopilot | --allow-all / --yolo / --allow-all-tools skip all approvals in interactive or programmatic mode; autopilot mode (--autopilot) adds autonomous continuation; can be disabled by enterprise policy permissions.disableBypassPermissionsMode."
+    },
+    {
+      "agent": "copilot-cli",
+      "capability": "free_tier",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"The table below provides an overview of differences between plans. All plans include Copilot CLI and Copilot app.\" at https://docs.github.com/en/copilot/get-started/plans | Copilot Free plan (at no cost, individual developers only) includes Copilot CLI with an AI-credit allowance and auto model selection only; CLI docs also state it is available with all Copilot plans."
+    },
+    {
+      "agent": "cline",
+      "capability": "thinking_control",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Set reasoning effort level between none|low|medium|high|xhigh (default: medium)\" at https://docs.cline.bot/cli/cli-reference.md | CLI `--thinking <level>` flag; CLI README describes configurable thinking budgets per run."
+    },
+    {
+      "agent": "cline",
+      "capability": "image_input",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"cline -i \"fix the layout issue shown in @./screenshot.png\"\" at https://docs.cline.bot/usage/cli-overview.md | CLI accepts images via @path mentions; IDE supports drag-and-drop and the + button for images/PDFs. Requires a multimodal model."
+    },
+    {
+      "agent": "cline",
+      "capability": "web_fetch",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"HTTP requests with HTML-to-markdown conversion\" at https://docs.cline.bot/tools-reference/all-cline-tools.md | Built-in `fetch_web` tool in ClineCore (called `fetch_web_content` in the SDK); the Adding Context page says Cline will fetch a URL when asked. IDE also has a browser tool."
+    },
+    {
+      "agent": "opencode",
+      "capability": "background_tasks",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"Enable background subagent tasks\" at https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/cli.mdx | Background subagent tasks exist only behind the experimental `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS` env var; no documented background shell command feature (community plugins like opencode-pty fill the gap)."
+    },
+    {
+      "agent": "opencode",
+      "capability": "parallel_agents",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"Has full tool access (except todo), so it can make file changes when needed. Use this to run multiple units of work in parallel.\" at https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/content/docs/agents.mdx | Parallelism is documented only as running multiple General subagents inside one session; git-worktree integration exists only as a community plugin (opencode-worktree) and workspaces are an experimental flag."
+    },
+    {
+      "agent": "goose",
+      "capability": "background_tasks",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"For background tasks, `delegate(..., async: true)` returns a task id, and `load(source: \"<task_id>\")` waits for the result.\" at https://raw.githubusercontent.com/aaif-goose/goose/main/documentation/docs/mcp/summon-mcp.md | Background execution is documented only for subagent delegation via the summon extension (async delegate, `GOOSE_MAX_BACKGROUND_TASKS`); no documented way to background a shell command in the developer shell tool."
+    },
+    {
+      "agent": "amp",
+      "capability": "thinking_control",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Alt+D toggles reasoning effort for the active model where supported.\" at https://ampcode.com/docs/cli/keybindings | Alt+D toggles reasoning effort in the CLI; each Dial mode also fixes a reasoning-effort level and custom modes/plugins can set their own."
+    },
+    {
+      "agent": "factory-droid",
+      "capability": "full_auto",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Skip all permission prompts (use with extreme caution)\" at https://docs.factory.ai/droid-cli/cli-reference.md | --skip-permissions-unsafe; docs restrict it to isolated containers, and blocklisted commands still never run."
+    },
+    {
+      "agent": "kiro-cli",
+      "capability": "model_selection",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Use the model dropdown in the chat interface, or set your default from the command line.\" at https://kiro.dev/docs/models.md | CLI-specific section; models include GPT-5.6 tiers, Claude Opus/Sonnet/Haiku, DeepSeek, GLM, MiniMax, Qwen and Auto, settable via kiro-cli settings chat.defaultModel or /model."
+    },
+    {
+      "agent": "kiro-cli",
+      "capability": "local_models",
+      "from": "no",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was no): \"Kiro is powered by Amazon Bedrock, which uses cross-region inference to distribute requests across the Regions within a geography.\" at https://kiro.dev/docs/models.md | No mention anywhere in the docs of Ollama, LM Studio, llama.cpp, vLLM or any locally hosted model serving the agent's responses."
+    },
+    {
+      "agent": "kiro-cli",
+      "capability": "auto_memory",
+      "from": "no",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was no): \"As you work with Kiro Web and give it feedback, it picks up your preferences and applies them to future work, so you don't have to restate the same guidance in every session.\" at https://kiro.dev/docs/web/memory.md | Agent-maintained memory is documented only for Kiro Web. The CLI has an experimental /knowledge base that the user populates, and steering files the user writes, not memory the agent maintains itself."
+    },
+    {
+      "agent": "mistral-vibe",
+      "capability": "thinking_control",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"| `/thinking` |  | Select the thinking level. |\" at https://docs.mistral.ai/vibe/code/cli/commands-shortcuts.md | Built-in slash command for the thinking level; the changelog also lists a reasoning-effort parameter for supported models."
+    },
+    {
+      "agent": "warp-agent-cli",
+      "capability": "cost_display",
+      "from": "yes",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was yes): \"Run `/cost` to toggle a summary row under the latest response showing how long it took and how many credits it spent (e.g., `12s • 1.2 credits`).\" at https://docs.warp.dev/agents/cli/models-and-usage.md | The statusline can also show accumulated conversation credits or the equivalent provider cost, and /usage shows account-level balances."
+    },
+    {
+      "agent": "warp-agent-cli",
+      "capability": "free_tier",
+      "from": "partial",
+      "to": "unknown",
+      "quote": "",
+      "evidence_url": "",
+      "notes": "UNVERIFIED on 2026-10-19 (quote not found on page; was partial): \"The Free plan doesn’t include bundled AI usage for the Warp Agent.\" at https://docs.warp.dev/support-and-community/plans-and-billing/plans-pricing-refunds.md | A Free plan exists, but using the agent requires a paid plan, add-on credits, or your own inference via BYOK or a custom endpoint."
     }
   ],
   "stats": {
     "agents_checked": 22,
     "agents_failed": [],
     "cells_total": 704,
-    "cells_verified": 682,
-    "cells_unknown": 22
+    "cells_verified": 657,
+    "cells_unknown": 47
   }
 }
