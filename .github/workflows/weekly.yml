@@ -1,7 +1,11 @@
 name: Weekly verification
 
-# Free mode (default): re-fetch every source page and re-check every quote. Quotes that vanished
-# demote their cell to "unknown"; a pull request and an issue are opened for a human.
+# Free mode (default): re-fetch every source page and re-check every quote. A quote that is not
+# found is flagged (quote_missing_since) and listed in an issue; its cell keeps its value. If it is
+# still missing a week later the cell is demoted to "unknown" in a pull request for a human. The
+# dates and flags go to main every week; only value changes wait for review. (Until 2026-11-16 a
+# week with any value change sent the dates to the pull request too, and none reached main for
+# seven weeks because the pull request was never merged.)
 # Claude mode: only when the ANTHROPIC_API_KEY secret is set (or mode=claude is chosen), every
 # cell is re-derived from the documentation with the Claude API, then verified the same way.
 #
@@ -102,12 +106,18 @@ jobs:
           node -e "
             const fs = require('fs');
             const c = require('./data/changes.json');
+            const pending = (c.pending || []).length;
+            const flagged = require('./data/matrix.json').cells.filter(x => x.quote_missing_since).length;
             let summary = c.changes.length + ' value changes';
+            let errors = 0;
             if (fs.existsSync('./data/check-report.json')) {
               const r = require('./data/check-report.json');
-              summary += ', ' + r.ok + ' quotes present, ' + r.errors + ' pages unreachable';
+              errors = r.errors;
+              summary += ', ' + r.ok + ' quotes present, ' + pending + ' newly missing, ' + r.errors + ' pages unreachable';
             }
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'count=' + c.changes.length + '\n' + 'summary=' + summary + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'count=' + c.changes.length + '\n' + 'summary=' + summary + '\n' + 'pending=' + pending + '\n' + 'flagged=' + flagged + '\n' + 'errors=' + errors + '\n');
+            // Kept aside: the pull request step moves this run's files to its branch and puts main's back.
+            fs.copyFileSync('./data/changes.md', require('path').join(process.env.RUNNER_TEMP, 'changes.md'));
             console.log(summary);
           "
 
@@ -129,6 +139,36 @@ jobs:
             git push
           fi
 
+      # A week with value changes: main gets the dates and flags now (main is not protected, so
+      # the workflow's own token can push), and only the value changes wait in the pull request.
+      # If this fails, the next step puts the full result back and the pull request carries all.
+      - name: Commit the dates and flags to main, keeping the value changes out
+        id: split
+        if: steps.changes.outputs.count != '0'
+        continue-on-error: true
+        env:
+          MODE: ${{ steps.mode.outputs.mode }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/full"
+          cp data/matrix.json data/changes.json data/changes.md "$RUNNER_TEMP/full/"
+          npx tsx scripts/split-value-changes.ts
+          npm run build
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/matrix.json data/changes.json data/changes.md README.md docs/
+          if git diff --cached --quiet; then
+            echo "Nothing but value changes; nothing to commit to main"
+          else
+            git commit -m "matrix: weekly re-verification ($MODE mode): dates and flags; the value changes are in a pull request"
+            git push
+          fi
+
+      - name: Put the full result back for the pull request
+        if: steps.changes.outputs.count != '0' && !cancelled()
+        run: |
+          cp "$RUNNER_TEMP/full/matrix.json" "$RUNNER_TEMP/full/changes.json" "$RUNNER_TEMP/full/changes.md" data/
+          npm run build
+
       - name: Open pull request (value changes, or the direct push was rejected)
         if: steps.changes.outputs.count != '0' || steps.commit.outcome == 'failure'
         uses: peter-evans/create-pull-request@v8
@@ -137,7 +177,7 @@ jobs:
           delete-branch: true
           commit-message: 'matrix: weekly re-verification (${{ steps.mode.outputs.mode }} mode): ${{ steps.changes.outputs.summary }}'
           title: 'matrix: weekly re-verification (${{ steps.changes.outputs.summary }})'
-          body-path: data/changes.md
+          body-path: ${{ runner.temp }}/changes.md
           labels: weekly-verification
           add-paths: |
             data/matrix.json
@@ -148,7 +188,7 @@ jobs:
 
       - name: Find the open recheck issue, if any (free mode)
         id: issue
-        if: steps.changes.outputs.count != '0' && steps.mode.outputs.mode == 'free'
+        if: (steps.changes.outputs.count != '0' || steps.changes.outputs.pending != '0') && steps.mode.outputs.mode == 'free'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -157,10 +197,24 @@ jobs:
           echo "Existing issue: ${NUMBER:-none}"
 
       - name: Open or update the issue for cells that need a human (free mode)
-        if: steps.changes.outputs.count != '0' && steps.mode.outputs.mode == 'free'
+        if: (steps.changes.outputs.count != '0' || steps.changes.outputs.pending != '0') && steps.mode.outputs.mode == 'free'
         uses: peter-evans/create-issue-from-file@v6
         with:
           issue-number: ${{ steps.issue.outputs.number }}
-          title: 'Docs changed: ${{ steps.changes.outputs.count }} cell(s) need a fresh quote'
-          content-filepath: data/changes.md
+          title: 'Docs changed: ${{ steps.changes.outputs.count }} cell(s) demoted, ${{ steps.changes.outputs.pending }} quote(s) newly missing'
+          content-filepath: ${{ runner.temp }}/changes.md
           labels: needs-recheck, good first issue
+
+      # Every page read, every quote found, nothing flagged or demoted: an open recheck issue and a
+      # demotion pull request from an earlier week are out of date (their quotes were found again
+      # or fixed), and merging that pull request would be wrong.
+      - name: Close an obsolete recheck issue and demotion pull request after a complete clean reading
+        if: steps.mode.outputs.mode == 'free' && env.AGENT_INPUT == '' && steps.changes.outputs.count == '0' && steps.changes.outputs.pending == '0' && steps.changes.outputs.flagged == '0' && steps.changes.outputs.errors == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NUMBER=$(gh issue list --label needs-recheck --state open --limit 1 --json number --jq '.[0].number // ""')
+          if [ -n "$NUMBER" ]; then gh issue close "$NUMBER" --reason completed; fi
+          if gh pr view bot/weekly-verification --json state --jq .state 2>/dev/null | grep -q OPEN; then
+            gh pr close bot/weekly-verification --delete-branch --comment "A complete reading on $(date -u +%F) found every quote and demoted nothing, so this pull request is out of date."
+          fi

@@ -97,7 +97,7 @@ export function classifyCell(cell: Cell, page: PageResult | undefined): CellRepo
   return { ...base, status: problems.length ? 'fail' : 'ok', method: m.method, problems };
 }
 
-export function structuralProblems(cells: Cell[], agents: Agent[], capabilities: Capability[]): { problems: string[]; missing: string[] } {
+export function structuralProblems(cells: Cell[], agents: Agent[], capabilities: Capability[], today: string = todayIso()): { problems: string[]; missing: string[] } {
   const agentIds = new Set(agents.map((a) => a.id));
   const capIds = new Set(capabilities.map((c) => c.id));
   const problems: string[] = [];
@@ -110,34 +110,75 @@ export function structuralProblems(cells: Cell[], agents: Agent[], capabilities:
     if (!capIds.has(cell.capability)) problems.push(`unknown capability ${cell.capability}`);
     if (cell.value !== 'unknown' && (!cell.quote.trim() || !cell.evidence_url.trim())) problems.push(`${key}: value ${cell.value} requires quote and evidence_url`);
     if (cell.value === 'unknown' && cell.verified) problems.push(`${key}: unknown cells cannot be verified`);
+    // A flag dated in the future, or not a date, would put a demotion off for good.
+    if (cell.quote_missing_since !== undefined) {
+      const age = /^\d{4}-\d{2}-\d{2}$/.test(cell.quote_missing_since) ? daysBetween(cell.quote_missing_since, today) : Number.NaN;
+      if (!(age >= 0)) problems.push(`${key}: quote_missing_since must be a date no later than today (${cell.quote_missing_since})`);
+    }
   }
   const missing: string[] = [];
   for (const a of agents) for (const c of capabilities) if (!seen.has(cellKey(a.id, c.id))) missing.push(cellKey(a.id, c.id));
   return { problems, missing };
 }
 
-/** Applies check results to the cells: ok -> verified today; fail -> unknown (old data kept in notes); error/skipped -> untouched. */
-export function applyFix(cells: Cell[], reports: CellReport[], missing: string[], today: string): { cells: Cell[]; demoted: number } {
+/** A quote must be missing from its page on two runs at least this many days apart before the cell is demoted. */
+export const GRACE_DAYS = 6;
+
+/** Whole days from ISO date a to ISO date b; infinite when either is unreadable, so a bad flag never blocks a demotion. */
+export function daysBetween(a: string, b: string): number {
+  const ms = Date.parse(b) - Date.parse(a);
+  return Number.isFinite(ms) ? Math.floor(ms / 86_400_000) : Number.POSITIVE_INFINITY;
+}
+
+/** Cells whose quote was not found on a fetched page but that are not demoted yet. */
+export interface PendingQuote {
+  agent: string;
+  capability: string;
+  evidence_url: string;
+  since: string;
+}
+
+/**
+ * Applies check results to the cells.
+ *   ok                    -> verified today, any missing-quote flag cleared
+ *   fail, first time      -> cell kept, flagged quote_missing_since = today (pending)
+ *   fail, flagged earlier -> still kept while the flag is younger than GRACE_DAYS; after that,
+ *                            unknown, with the old quote, URL and value kept in the notes
+ *   error / skipped       -> untouched (a page that could not be read never moves the clock)
+ * The grace week exists because documentation sites are rebuilt, renamed and briefly broken: one
+ * odd fetch must not erase a verified cell, and a human gets a week to find the new wording.
+ */
+export function applyFix(cells: Cell[], reports: CellReport[], missing: string[], today: string): { cells: Cell[]; demoted: number; pending: PendingQuote[] } {
   const byKey = new Map(reports.map((r) => [cellKey(r.agent, r.capability), r]));
   let demoted = 0;
+  const pending: PendingQuote[] = [];
   const out: Cell[] = cells.map((cell) => {
     const r = byKey.get(cellKey(cell.agent, cell.capability));
     if (!r) return cell;
     if (r.status === 'fail') {
+      const since = cell.quote_missing_since ?? today;
+      if (!cell.quote_missing_since || daysBetween(since, today) < GRACE_DAYS) {
+        pending.push({ agent: cell.agent, capability: cell.capability, evidence_url: cell.evidence_url, since });
+        return { ...cell, quote_missing_since: since };
+      }
       demoted++;
       const tail = cell.notes.trim() ? ` | ${cell.notes.trim()}` : '';
+      const { quote_missing_since: _flag, ...rest } = cell;
       return {
-        ...cell,
+        ...rest,
         value: 'unknown',
         quote: '',
         evidence_url: '',
         confidence: 'low',
         verified: false,
         verified_at: '',
-        notes: `UNVERIFIED on ${today} (${r.problems.join('; ')}; was ${cell.value}): "${cell.quote.trim()}" at ${cell.evidence_url}${tail}`,
+        notes: `UNVERIFIED on ${today} (${r.problems.join('; ')} since ${since}; was ${cell.value}): "${cell.quote.trim()}" at ${cell.evidence_url}${tail}`,
       };
     }
-    if (r.status === 'ok' && cell.value !== 'unknown') return { ...cell, verified: true, verified_at: today };
+    if (r.status === 'ok' && cell.value !== 'unknown') {
+      const { quote_missing_since: _flag, ...rest } = cell;
+      return { ...rest, verified: true, verified_at: today };
+    }
     if (cell.value === 'unknown' && cell.verified) return { ...cell, verified: false, verified_at: '' };
     return cell;
   });
@@ -145,7 +186,17 @@ export function applyFix(cells: Cell[], reports: CellReport[], missing: string[]
     const [agent, capability] = key.split('|') as [string, string];
     out.push({ agent, capability, value: 'unknown', quote: '', evidence_url: '', notes: '', confidence: 'low', verified: false, verified_at: '' });
   }
-  return { cells: out, demoted };
+  return { cells: out, demoted, pending };
+}
+
+/**
+ * Failed quotes that fail the plain check (and so the pull-request check): a quote missing on a
+ * cell that the weekly run has already flagged is reported, not failed. Otherwise the weekly
+ * run's own flag would fail every open pull request until the cell is demoted a week later.
+ */
+export function failingNow(failures: CellReport[], cells: Cell[]): CellReport[] {
+  const flagged = new Set(cells.filter((c) => c.quote_missing_since).map((c) => cellKey(c.agent, c.capability)));
+  return failures.filter((r) => !flagged.has(cellKey(r.agent, r.capability)));
 }
 
 export async function runCheck(opts: CheckOptions): Promise<number> {
@@ -200,7 +251,8 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
 
   if (opts.fix) {
     const today = todayIso();
-    const { cells, demoted } = applyFix(matrix.cells, reports, missing, today);
+    const { cells, demoted, pending } = applyFix(matrix.cells, reports, missing, today);
+    for (const p of pending) console.log(`  PENDING ${p.agent}/${p.capability} quote missing since ${p.since}; kept, demoted if still missing after ${GRACE_DAYS} days`);
     const sorted = sortCells(cells, agents, caps.capabilities);
     const runAt = new Date().toISOString();
     const checked = opts.agent ? sorted.filter((c) => c.agent === opts.agent) : sorted;
@@ -208,6 +260,7 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
       run_at: runAt,
       model: opts.agent ? `none (mechanical quote re-check, agent ${opts.agent} only)` : 'none (mechanical quote re-check)',
       changes: diffMatrices(matrix.cells, sorted),
+      pending,
       stats: {
         agents_checked: new Set(checked.map((c) => c.agent)).size,
         agents_failed: [],
@@ -219,10 +272,12 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
     saveJson(path.join(DATA_DIR, 'matrix.json'), { version: 1, generated_at: runAt, cells: sorted });
     saveJson(path.join(DATA_DIR, 'changes.json'), changes);
     writeFileSync(path.join(DATA_DIR, 'changes.md'), renderChangesMarkdown(changes, agents, caps.capabilities, errors.map((e) => `${e.agent}/${e.capability}: ${e.problems.join('; ')}`)), 'utf8');
-    console.log(`Wrote data/matrix.json (${demoted} cells demoted to unknown, ${missing.length} missing cells added), data/changes.json, data/changes.md`);
+    console.log(`Wrote data/matrix.json (${demoted} cells demoted to unknown, ${pending.length} quotes pending, ${missing.length} missing cells added), data/changes.json, data/changes.md`);
   }
 
-  const bad = failures.length + structural.length + (opts.fix ? 0 : missing.length);
+  const flaggedOnly = failures.length - failingNow(failures, matrix.cells).length;
+  if (flaggedOnly > 0) console.log(`${flaggedOnly} of the failed quotes are on cells the weekly run already flagged: reported, not failed (demoted ${GRACE_DAYS} days after the flag unless re-quoted)`);
+  const bad = failingNow(failures, matrix.cells).length + structural.length + (opts.fix ? 0 : missing.length);
   return bad > 0 && !opts.soft ? 1 : 0;
 }
 
