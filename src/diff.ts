@@ -69,6 +69,12 @@ export function renderChangesMarkdown(file: ChangesFile, agents: Agent[], capabi
     for (const e of fetchErrors.slice(0, 30)) lines.push(`- ${escapeMd(e)}`);
     if (fetchErrors.length > 30) lines.push(`- …and ${fetchErrors.length - 30} more`);
   }
+  const pending = file.pending ?? [];
+  if (pending.length > 0) {
+    lines.push('');
+    lines.push(`Quotes not found on their page this run (${pending.length}). The cells keep their value for now and are demoted to unknown if the quote is still missing a week later; a fresh quote now is cheaper than a demotion later:`);
+    for (const p of pending) lines.push(`- ${escapeMd(agentName.get(p.agent) ?? p.agent)} / ${escapeMd(capName.get(p.capability) ?? p.capability)}: missing since ${p.since} (${escapeMd(p.evidence_url)})`);
+  }
   lines.push('');
   if (n === 0) {
     lines.push('No capability values changed. Verification dates were refreshed.');

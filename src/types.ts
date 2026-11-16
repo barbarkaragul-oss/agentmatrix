@@ -64,6 +64,8 @@ export const CellSchema = z.object({
   confidence: ConfidenceSchema,
   verified: z.boolean(),
   verified_at: z.string(),
+  /** Set by the weekly check the first time a quote is not found on its fetched page (YYYY-MM-DD). */
+  quote_missing_since: z.string().optional(),
 });
 export type Cell = z.infer<typeof CellSchema>;
 
@@ -89,6 +91,8 @@ export const ChangesFileSchema = z.object({
   run_at: z.string(),
   model: z.string(),
   changes: z.array(ChangeSchema),
+  /** Quotes missing from their page for the first time, or still within the grace period. */
+  pending: z.array(z.object({ agent: z.string(), capability: z.string(), evidence_url: z.string(), since: z.string() })).optional(),
   stats: z.object({
     agents_checked: z.number(),
     agents_failed: z.array(z.string()),
