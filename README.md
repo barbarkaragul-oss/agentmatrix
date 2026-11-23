@@ -21,7 +21,7 @@
 </p>
 
 <!-- stats:start -->
-**22 agents × 32 capabilities · 681/704 cells verified against their source · last verification 2026-11-16** · ✅ 477 · 🟡 106 · ❌ 98 · ❔ 23
+**22 agents × 32 capabilities · 681/704 cells verified against their source · last verification 2026-11-23** · ✅ 477 · 🟡 106 · ❌ 98 · ❔ 23
 <!-- stats:end -->
 
 "Does Codex CLI have hooks? Can Gemini CLI act as an MCP server? Which of these run natively on Windows?" Answers to questions like these are usually given from memory, and comparison tables are rarely dated or sourced. This repository answers from the documentation, and shows its work:
@@ -127,9 +127,7 @@ Values follow a written rubric per capability (see [`data/capabilities.json`](da
 ## Recent changes
 
 <!-- changes:start -->
-Last run 2026-09-23:
-
-- **Claude Code** · AGENTS.md support: partial → **yes** ([source](https://code.claude.com/docs/en/memory.md))
+_Last run 2026-11-23: every quote was still present at its source, no value changed._
 <!-- changes:end -->
 
 ## How it works
